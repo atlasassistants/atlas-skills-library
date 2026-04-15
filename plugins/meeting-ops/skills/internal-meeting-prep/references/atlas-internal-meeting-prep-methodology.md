@@ -27,7 +27,8 @@ One sentence — what is this meeting actually for? If the user set the meeting,
 
 The substantive section. Pulled from second-brain search using the heuristics in the next section. Organize as:
 
-- **Recent interactions** — most recent meetings/notes/messages with these attendees (last 30 days), one bullet each with date and one-line summary
+- **Prior meetings with these people** — pulled from the **meeting log** (the running database of all past meeting debriefs). For each attendee, find the most recent meeting(s) with them and surface: date, what was discussed, decisions, and any open threads or commitments from that meeting. This is the highest-signal context source — start here.
+- **Recent interactions** — other recent notes, messages, or session logs mentioning these attendees in the last 30 days
 - **Active projects involving these attendees** — current state from `state.md` or equivalent, one bullet per project
 - **Recent decisions** — anything decided in the last 30 days that's relevant to this meeting or these people
 - **Threads in flight** — open threads or commitments involving anyone in the meeting
@@ -46,14 +47,15 @@ Anything the user should do in the 15 minutes before the meeting (read a doc, ch
 
 ## Second-brain search heuristics
 
-When pulling context in section 3, the agent searches across the user's knowledge base using these signals:
+When pulling context in section 3, the agent searches across the user's knowledge base using these signals, in priority order:
 
-- **Attendee names** — every meeting note, project page, or session log mentioning any attendee
-- **Project tags / wikilinks** — any project page where the attendees show up as active contributors
-- **Recent meeting notes** — last 30 days of notes mentioning any attendee, regardless of project
-- **Open action items** — any open action assigned to or owed by anyone in the meeting
-- **Recent decisions** — last 30 days of decisions tagged or wikilinked to attendees or relevant projects
-- **Direct topic match** — if the meeting title or agenda mentions a specific topic, search the KB for that topic
+1. **Meeting log first** — query the meeting log database for prior meetings with any of the attendees. The meeting log is the running record of every meeting debrief and is the highest-signal source for "what's the state of my relationship with this person right now." Always check it first.
+2. **Attendee names** — every other meeting note, project page, or session log mentioning any attendee
+3. **Project tags / wikilinks** — any project page where the attendees show up as active contributors
+4. **Recent notes** — last 30 days of notes mentioning any attendee, regardless of project
+5. **Open action items** — any open action assigned to or owed by anyone in the meeting
+6. **Recent decisions** — last 30 days of decisions tagged or wikilinked to attendees or relevant projects
+7. **Direct topic match** — if the meeting title or agenda mentions a specific topic, search the KB for that topic
 
 Time-box the search. Don't try to read everything — read enough to populate the brief sections honestly. If the KB has nothing relevant, say so in the brief rather than padding with noise.
 
