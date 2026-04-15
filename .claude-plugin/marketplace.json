@@ -1,0 +1,16 @@
+{
+  "name": "atlas",
+  "owner": {
+    "name": "Atlas Assistants",
+    "url": "https://github.com/colin-atlas"
+  },
+  "plugins": [
+    {
+      "name": "meeting-ops",
+      "source": "./plugins/meeting-ops",
+      "description": "Meeting preparation, calendar scanning, and structured debriefs. Encodes Atlas's meeting methodology.",
+      "version": "0.1.0",
+      "tags": ["meetings", "productivity", "calendar"]
+    }
+  ]
+}
