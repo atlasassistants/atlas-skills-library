@@ -1,0 +1,10 @@
+{
+  "name": "meeting-ops",
+  "version": "0.1.0",
+  "description": "Meeting prep (internal + external), calendar scanning, and structured debriefs. Encodes Atlas's meeting methodology.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["meetings", "productivity", "calendar"],
+  "tier": "lightweight"
+}
