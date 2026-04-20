@@ -1,0 +1,10 @@
+{
+  "name": "inbox-zero",
+  "version": "0.1.0",
+  "description": "Daily inbox management — triage, escalation detection, follow-up cadences, voice-matched drafts, and SOD/EOD reporting. Brings an executive to inbox zero every day.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["email", "inbox", "productivity", "executive", "triage"],
+  "tier": "heavyweight"
+}

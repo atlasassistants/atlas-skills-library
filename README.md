@@ -6,8 +6,13 @@ A collection of Claude Code plugins and portable skills built and battle-tested 
 
 Plugins live under `plugins/`. Each one is independently installable via the Claude Code marketplace flow. See each plugin's own README for details.
 
-**v1 plugins:**
+**Plugins:**
 - [`meeting-ops`](plugins/meeting-ops/) — meeting prep (internal and external), calendar scanning, and structured debriefs
+- [`inbox-zero`](plugins/inbox-zero/) — daily inbox triage, escalation detection, follow-up cadences, voice-matched drafts, SOD/EOD reports
+- [`compounding-learning`](plugins/compounding-learning/) — capture skills, insights, patterns, and corrections during work
+- [`presentation-builder`](plugins/presentation-builder/) — build polished self-contained HTML slide decks with branded styling
+- [`proactive-actions`](plugins/proactive-actions/) — classify and execute meeting action items autonomously after debriefs
+- [`travel-prep`](plugins/travel-prep/) — proactive travel preparation, pre-trip briefings, and day-of support
 
 ## Installing a plugin
 

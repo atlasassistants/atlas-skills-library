@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{DECK_TITLE}}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #111111;
+      --color-accent: #0066FF;
+      --color-bg: #FFFFFF;
+      --color-text: #333333;
+      --color-muted: #6B7280;
+      --color-surface: #F9FAFB;
+      --color-border: #E5E7EB;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --slide-padding: 48px;
+      --radius: 6px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Viewport ── */
+    #deck {
+      position: relative;
+      width: min(100vw, calc(100vh * 16/9));
+      height: min(100vh, calc(100vw * 9/16));
+      overflow: hidden;
+    }
+
+    /* ── Slides container ── */
+    #slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── Base slide ── */
+    .slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      background: var(--color-bg);
+      padding: var(--slide-padding);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      position: absolute;
+      top: 24px;
+      left: var(--slide-padding);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── Slide counter ── */
+    #counter {
+      position: fixed;
+      bottom: 16px;
+      right: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--font-body);
+      z-index: 100;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Typography ── */
+    h1 { font-size: clamp(28px, 4vw, 52px); font-weight: 700; color: var(--color-primary); line-height: 1.1; }
+    h2 { font-size: clamp(20px, 2.8vw, 36px); font-weight: 700; color: var(--color-primary); line-height: 1.2; }
+    h3 { font-size: clamp(14px, 1.8vw, 22px); font-weight: 600; color: var(--color-primary); line-height: 1.3; }
+    p, li { font-size: clamp(13px, 1.5vw, 18px); color: var(--color-text); line-height: 1.6; }
+    .label { font-size: clamp(10px, 1.1vw, 13px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
+    .divider { width: 48px; height: 3px; background: var(--color-accent); margin: 20px 0; border-radius: 2px; }
+
+    /* ════════════════════════════════
+       SLIDE TYPES
+    ════════════════════════════════ */
+
+    /* ── Title ── */
+    .slide-title { justify-content: center; }
+    .slide-title h1 { max-width: 75%; }
+    .slide-title .subtitle { font-size: clamp(14px, 1.6vw, 20px); color: var(--color-muted); margin-top: 8px; }
+    .slide-title .meta { font-size: clamp(11px, 1.2vw, 14px); color: var(--color-muted); margin-top: 8px; }
+
+    /* ── Agenda ── */
+    .slide-agenda h2 { margin-bottom: 32px; }
+    .slide-agenda ol { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .slide-agenda li { display: flex; align-items: baseline; gap: 16px; font-size: clamp(14px, 1.6vw, 20px); color: var(--color-text); }
+    .slide-agenda li::before { content: counter(agenda-item, decimal-leading-zero); counter-increment: agenda-item; font-weight: 700; color: var(--color-accent); min-width: 28px; font-size: 0.85em; }
+    .slide-agenda ol { counter-reset: agenda-item; }
+    .slide-agenda .time { color: var(--color-muted); font-size: 0.85em; margin-left: auto; }
+
+    /* ── Metric Cards ── */
+    .slide-metric-cards h2 { margin-bottom: 28px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+    .metric-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 24px 20px; }
+    .metric-card .metric-value { font-size: clamp(28px, 3.5vw, 48px); font-weight: 700; color: var(--color-primary); line-height: 1; margin: 8px 0; }
+    .metric-card .metric-context { font-size: clamp(11px, 1.1vw, 13px); color: var(--color-muted); }
+
+    /* ── Data Table ── */
+    .slide-data-table h2 { margin-bottom: 24px; }
+    .slide-data-table table { width: 100%; border-collapse: collapse; font-size: clamp(12px, 1.3vw, 15px); }
+    .slide-data-table th { text-align: left; font-weight: 600; color: var(--color-muted); font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 14px; border-bottom: 2px solid var(--color-border); }
+    .slide-data-table td { padding: 12px 14px; border-bottom: 1px solid var(--color-border); color: var(--color-text); }
+    .slide-data-table tr:last-child td { border-bottom: none; }
+    .slide-data-table .highlight td { background: #EFF6FF; font-weight: 600; }
+    .slide-data-table .highlight td:first-child { border-left: 3px solid var(--color-accent); }
+
+    /* ── Before / After ── */
+    .slide-before-after h2 { margin-bottom: 28px; }
+    .before-after-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; }
+    .ba-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 24px; }
+    .ba-card.after { border-color: var(--color-accent); background: #EFF6FF; }
+    .ba-card .ba-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 14px; }
+    .ba-card.after .ba-label { color: var(--color-accent); }
+    .ba-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .ba-card li { font-size: clamp(13px, 1.4vw, 16px); color: var(--color-text); padding-left: 16px; position: relative; }
+    .ba-card li::before { content: '—'; position: absolute; left: 0; color: var(--color-muted); }
+    .ba-card.after li::before { color: var(--color-accent); content: '✓'; }
+
+    /* ── Grid Cards ── */
+    .slide-grid-cards h2 { margin-bottom: 24px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 20px; }
+    .card .card-icon { font-size: 24px; margin-bottom: 10px; }
+    .card .card-title { font-size: clamp(13px, 1.4vw, 16px); font-weight: 700; color: var(--color-primary); margin-bottom: 6px; }
+    .card .card-body { font-size: clamp(12px, 1.2vw, 14px); color: var(--color-muted); line-height: 1.5; }
+
+    /* ── Quote / Statement ── */
+    .slide-quote { align-items: center; text-align: center; }
+    .slide-quote blockquote { max-width: 75%; }
+    .slide-quote blockquote p { font-size: clamp(20px, 2.8vw, 36px); font-weight: 500; color: var(--color-primary); line-height: 1.4; font-style: italic; }
+    .slide-quote .attribution { margin-top: 24px; font-size: clamp(12px, 1.3vw, 15px); color: var(--color-muted); }
+
+    /* ── Discussion ── */
+    .slide-discussion { align-items: center; text-align: center; justify-content: center; }
+    .slide-discussion .discussion-label { font-size: clamp(10px, 1.1vw, 13px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 24px; }
+    .slide-discussion h2 { max-width: 70%; font-size: clamp(22px, 3.2vw, 42px); }
+
+    /* ── Two Column ── */
+    .slide-two-column h2 { margin-bottom: 28px; }
+    .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; }
+    .col h3 { margin-bottom: 16px; color: var(--color-accent); }
+    .col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .col li { font-size: clamp(13px, 1.4vw, 16px); color: var(--color-text); padding-left: 16px; position: relative; }
+    .col li::before { content: '–'; position: absolute; left: 0; color: var(--color-muted); }
+
+    /* ── The Line ── */
+    .slide-the-line { justify-content: center; }
+    .the-line-text { border-left: 4px solid var(--color-accent); padding-left: 28px; max-width: 80%; }
+    .the-line-text p { font-size: clamp(22px, 3vw, 40px); font-style: italic; font-weight: 500; color: var(--color-primary); line-height: 1.3; }
+    .the-line-text .attribution { margin-top: 16px; font-size: clamp(12px, 1.2vw, 14px); color: var(--color-muted); }
+
+    /* ── Conversation Table ── */
+    .slide-conversation-table h2 { margin-bottom: 24px; }
+    .convo-table { width: 100%; border-collapse: collapse; font-size: clamp(12px, 1.3vw, 15px); }
+    .convo-table th { text-align: left; font-weight: 600; color: var(--color-muted); font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 14px; border-bottom: 2px solid var(--color-border); }
+    .convo-table td { padding: 12px 14px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+    .convo-table .old { color: var(--color-muted); text-decoration: line-through; }
+    .convo-table .new { color: var(--color-primary); font-weight: 500; }
+    .convo-table .tag { display: inline-block; font-size: 11px; font-weight: 600; color: var(--color-accent); background: #EFF6FF; border-radius: 4px; padding: 2px 8px; }
+
+    /* ── Close ── */
+    .slide-close { align-items: center; text-align: center; justify-content: center; }
+    .slide-close h2 { max-width: 65%; font-size: clamp(24px, 3.2vw, 44px); }
+    .slide-close .supporting { font-size: clamp(14px, 1.5vw, 18px); color: var(--color-muted); margin-top: 12px; max-width: 55%; }
+    .slide-close .cta { margin-top: 32px; font-size: clamp(13px, 1.4vw, 16px); font-weight: 600; color: var(--color-accent); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      :root { --slide-padding: 28px; }
+      .metric-grid, .card-grid { grid-template-columns: repeat(2, 1fr); }
+      .before-after-grid, .two-col-grid { grid-template-columns: 1fr; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="deck">
+    <div class="logo">{{LOGO}}</div>
+    <div id="slides">
+      <!-- slides injected here by build-deck -->
+    </div>
+  </div>
+  <div id="counter"></div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+
+    function go(n) {
+      current = Math.max(0, Math.min(slides.length - 1, n));
+      document.getElementById('slides').style.transform = `translateX(-${current * 100}%)`;
+      document.getElementById('counter').textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); go(current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(current - 1); }
+      if (e.key === 'Home') go(0);
+      if (e.key === 'End') go(slides.length - 1);
+    });
+
+    // Touch/swipe
+    let touchX = 0;
+    document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', e => {
+      const diff = touchX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) go(diff > 0 ? current + 1 : current - 1);
+    }, { passive: true });
+
+    go(0);
+  </script>
+</body>
+</html>

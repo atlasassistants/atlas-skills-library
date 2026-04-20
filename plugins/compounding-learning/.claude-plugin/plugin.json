@@ -1,0 +1,10 @@
+{
+  "name": "compounding-learning",
+  "version": "0.1.0",
+  "description": "Capture skills, insights, patterns, and corrections during work — never solve the same problem twice.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["learning", "knowledge-management", "productivity", "memory"],
+  "tier": "lightweight"
+}

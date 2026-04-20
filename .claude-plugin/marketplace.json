@@ -11,6 +11,41 @@
       "description": "Meeting preparation, calendar scanning, and structured debriefs. Encodes Atlas's meeting methodology.",
       "version": "0.1.0",
       "tags": ["meetings", "productivity", "calendar"]
+    },
+    {
+      "name": "inbox-zero",
+      "source": "./plugins/inbox-zero",
+      "description": "Daily inbox management — triage, escalation detection, follow-up cadences, voice-matched drafts, and SOD/EOD reporting.",
+      "version": "0.1.0",
+      "tags": ["email", "inbox", "productivity", "executive", "triage"]
+    },
+    {
+      "name": "compounding-learning",
+      "source": "./plugins/compounding-learning",
+      "description": "Capture skills, insights, patterns, and corrections during work — never solve the same problem twice.",
+      "version": "0.1.0",
+      "tags": ["learning", "knowledge-management", "productivity", "memory"]
+    },
+    {
+      "name": "presentation-builder",
+      "source": "./plugins/presentation-builder",
+      "description": "Build polished, self-contained HTML slide deck presentations with navigation, branded styling, and multiple slide types.",
+      "version": "0.1.0",
+      "tags": ["presentations", "slides", "design", "productivity"]
+    },
+    {
+      "name": "proactive-actions",
+      "source": "./plugins/proactive-actions",
+      "description": "After meeting debriefs, classify and execute action items autonomously — execute, draft, chase, or escalate.",
+      "version": "0.1.0",
+      "tags": ["automation", "actions", "meetings", "productivity", "follow-up"]
+    },
+    {
+      "name": "travel-prep",
+      "source": "./plugins/travel-prep",
+      "description": "Proactive travel preparation for executive travelers — onboarding, pre-trip briefings, and day-of support.",
+      "version": "0.1.0",
+      "tags": ["travel", "executive", "calendar", "briefings", "logistics"]
     }
   ]
 }

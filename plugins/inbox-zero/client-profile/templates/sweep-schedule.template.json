@@ -1,0 +1,24 @@
+{
+  "days": "weekdays",
+  "runs": {
+    "eod": {
+      "enabled": false,
+      "time": "16:00"
+    },
+    "midday": {
+      "enabled": false,
+      "time": "12:30"
+    },
+    "morning": {
+      "enabled": false,
+      "time": "08:00"
+    }
+  },
+  "scheduler": {
+    "backend": "none",
+    "managedJobs": {},
+    "updatedAt": null
+  },
+  "timezone": null,
+  "version": 1
+}

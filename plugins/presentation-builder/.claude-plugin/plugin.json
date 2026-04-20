@@ -1,0 +1,10 @@
+{
+  "name": "presentation-builder",
+  "version": "0.1.0",
+  "description": "Build polished, self-contained HTML slide deck presentations with navigation, branded styling, and multiple slide types.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["presentations", "slides", "design", "productivity"],
+  "tier": "lightweight"
+}

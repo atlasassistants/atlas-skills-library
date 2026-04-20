@@ -1,0 +1,10 @@
+{
+  "name": "proactive-actions",
+  "version": "0.1.0",
+  "description": "After meeting debriefs, classify and execute action items autonomously — execute what's possible, draft what needs review, chase outstanding commitments, escalate what needs a human.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["automation", "actions", "meetings", "productivity", "follow-up"],
+  "tier": "medium"
+}
