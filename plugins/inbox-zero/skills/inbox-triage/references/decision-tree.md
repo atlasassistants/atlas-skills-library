@@ -67,7 +67,7 @@ Output JSON per item:
 
 1. **Escalation check runs first, as a separate skill.** By the time `inbox-triage` processes a message, `escalation-handler` has already labeled anything urgent. Don't second-guess those items — they already have `1-Action Required`.
 
-2. **CC + domain match → Delegated, NOT Read Only.** This is the single most common error. If Anna (Finance) is CC'd on a billing thread, that thread is `4-Delegated`, not `2-Read Only`. The reasoning: Read Only means "nothing needs to happen" — but if a team member is CC'd, something is happening.
+2. **CC + domain match → Delegated, NOT Read Only.** This is the single most common error. If a Finance team member is CC'd on a billing thread, that thread is `4-Delegated`, not `2-Read Only`. The reasoning: Read Only means "nothing needs to happen" — but if a team member is CC'd, something is happening.
 
 3. **One label per email. Exactly one.** Never stack. If you're tempted to apply both `0-Leads` and `1-Action Required`, pick the more actionable one (`1-Action Required` — the exec needs to decide) and mention the revenue aspect in the report or draft, depending on whether a reply is actually needed.
 

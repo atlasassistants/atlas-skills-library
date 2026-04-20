@@ -63,7 +63,7 @@ Inbox Management Update:
 - Pulls from: `0-Leads` items surfaced this session.
 - Format: `[Prospect/Lead name or company] — [amount or opportunity], [EA action]`
 - If there's an explicit dollar value, include it. If not, a one-line opportunity description.
-- EA action = what the EA is doing with it: `scheduling call`, `I'll handle the intro`, `drafted warm reply`, `sent to Cesar`.
+- EA action = what the EA is doing with it: `scheduling call`, `I'll handle the intro`, `drafted warm reply`, `sent to [team member]`.
 - Omit the section entirely if zero leads this session.
 
 #### ⏰ Following Up Today
@@ -80,7 +80,7 @@ Inbox Management Update:
   - `Invoice from Stripe — auto-labeled to 6-Receipts/Invoices`
   - `47 newsletters filtered to Subscriptions`
   - `12 receipts auto-labeled — no action needed`
-  - `Calendar invite from John — accepted, on your schedule`
+  - `Calendar invite from [Name] — accepted, on your schedule`
   - `8 emails routed to 4-Delegated for EA review`
 - Group by type when possible: instead of 47 individual newsletter lines, a single summary line with the count.
 - Cap at ~5 lines. This section is a trust signal ("look, I did stuff") but it shouldn't bury the actionable items above.
@@ -178,20 +178,20 @@ Inbox Management Update:
 
 💰 **Revenue**
 1. Acme Corp (Sarah Kim) — Q2 enterprise terms ($180K ARR), scheduling call
-2. Referral from Jake @ BigCo — warm intro to their VP Eng, drafted reply
+2. Referral from Alex @ Acme — warm intro to their VP Eng, drafted reply
 
 ⏰ **Following Up Today**
 1. Sarah @ Acme re: Q2 terms (4 days waiting, Day 4 draft ready)
 2. Marcus re: vendor contract review (5 days, Day 5 draft ready)
-3. Lisa @ BigCo re: partnership (7 days, Day 7 final draft ready)
-4. Exhausted: Dana @ Techly re: licensing — exec decides drop or keep
+3. Morgan @ Acme re: partnership (7 days, Day 7 final draft ready)
+4. Exhausted: Jordan @ Globex re: licensing — exec decides drop or keep
 
 ✅ **Handled For You**
 1. 47 newsletters filtered to Subscriptions
-2. Invoice from Stripe ($2,140) — routed to Anna (Finance)
-3. Expense reports from 3 team members — routed to Anna (Finance)
-4. Calendar invite from John (Thursday 10am) — accepted
-5. Client success renewal question — routed to Cesar
+2. Invoice from Stripe ($2,140) — routed to Finance
+3. Expense reports from 3 team members — routed to Finance
+4. Calendar invite from [Name] (Thursday 10am) — accepted
+5. Client success renewal question — routed to CS team
 
 📅 **Today's Email-Driven Actions**
 1. 10:30am: Call with Sarah @ Acme (from Q2 terms thread)
@@ -226,7 +226,7 @@ Inbox EOD Summary:
 - 0-Leads: archived 1 (call scheduled), 2 kept
 
 **Alerts**
-- Dana @ Techly cadence exhausted — moved to 5-Follow Up for your decision
+- Jordan @ Globex cadence exhausted — moved to 5-Follow Up for your decision
 ```
 
 ### Example: Midday check (tiny)

@@ -18,9 +18,9 @@ Things the group concluded during the meeting and now agree on. A decision is so
 - Has consensus or at least no objection from the relevant people
 - Will affect future work or behavior
 
-Examples (from a real Atlas L10):
-- "Atlas will convert the EA recruitment pipeline toward higher-AI-capability EAs instead of running a separate AI-operator sandbox."
-- "Connect Team will remain in place for HR operations during the transition; Circle becomes the training and community layer."
+Examples:
+- "We will pause new feature work and focus the team on stability through end of quarter."
+- "Operations team retains current tooling; platform team evaluates alternatives and reports back in 30 days."
 
 What's NOT a decision: a discussion topic, an opinion someone shared, a thing someone is going to think about, an action item.
 
@@ -131,7 +131,7 @@ The routing step is **post-debrief** — first the meeting log entry is written 
 ## What good output looks like
 
 - **Categories cleanly separated.** No action items hiding in the discussion section. No decisions buried in the summary.
-- **Specific.** Names, dates, exact deliverables. Not "discuss the new initiative" — "Cesar will draft the client FAQ by 2026-04-17."
+- **Specific.** Names, dates, exact deliverables. Not "discuss the new initiative" — "Alex will draft the client FAQ by 2026-04-17."
 - **Complete enough to be the only record.** A reader who didn't attend should be able to understand what happened and what's owed by whom.
 - **Honest about gaps.** If the transcript is missing a section, say so. If a decision is unclear, mark it as an open question instead.
 - **Compatible with the meeting log contract.** Frontmatter matches the user's vault format. Filename follows convention.

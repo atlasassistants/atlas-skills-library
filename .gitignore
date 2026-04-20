@@ -6,3 +6,24 @@ node_modules/
 !.env.example
 .vscode/
 .idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Plugin runtime state (generated at runtime, never commit)
+**/client-profile/credentials/
+**/client-profile/.plugin-state.json
+**/client-profile/.plugin-state.json.bak
+**/client-profile/approvals/
+**/client-profile/filter-backup.json
+**/client-profile/.cleanup-done
+**/client-profile/.onboarding-complete
+**/client-profile/vip-contacts.md
+**/client-profile/team-delegation-map.md
+**/client-profile/label-sweep-rules.md
+**/client-profile/exec-voice-guide.md
+**/client-profile/exec-preferences.md
+**/client-profile/sweep-schedule.json
+**/logs/
