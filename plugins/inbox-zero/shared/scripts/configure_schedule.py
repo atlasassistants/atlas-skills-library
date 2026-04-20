@@ -29,6 +29,8 @@ DEFAULT_TIMES = {
     "eod": "16:00",
 }
 
+SCHEDULER_CMD = "claude"
+
 
 def default_config() -> dict[str, Any]:
     return {
@@ -129,23 +131,23 @@ def _parse_jobs_payload(payload: str) -> list[dict[str, Any]]:
     return jobs if isinstance(jobs, list) else []
 
 
-def list_openclaw_jobs() -> list[dict[str, Any]]:
-    result = run_command(["openclaw", "cron", "list", "--all", "--json"])
+def list_scheduler_jobs() -> list[dict[str, Any]]:
+    result = run_command([SCHEDULER_CMD, "cron", "list", "--all", "--json"])
     if result.returncode != 0:
         stderr = result.stderr.strip() or result.stdout.strip()
-        raise RuntimeError(f"Unable to list OpenClaw cron jobs: {stderr}")
+        raise RuntimeError(f"Unable to list scheduler cron jobs: {stderr}")
     return _parse_jobs_payload(result.stdout)
 
 
 def _existing_jobs_by_name() -> dict[str, dict[str, Any]]:
     return {
         job.get("name"): job
-        for job in list_openclaw_jobs()
+        for job in list_scheduler_jobs()
         if isinstance(job, dict) and job.get("name")
     }
 
 
-def build_openclaw_message(mode: str, plugin_root: Path = PLUGIN_ROOT) -> str:
+def build_scheduler_message(mode: str, plugin_root: Path = PLUGIN_ROOT) -> str:
     command = (
         f"cd {shlex.quote(str(plugin_root))} && "
         f"python3 shared/scripts/orchestrator.py --mode {mode}"
@@ -156,14 +158,14 @@ def build_openclaw_message(mode: str, plugin_root: Path = PLUGIN_ROOT) -> str:
     )
 
 
-def openclaw_job_description(mode: str) -> str:
+def scheduler_job_description(mode: str) -> str:
     return (
         f"Runs the Atlas Inbox Zero {mode} sweep using the plugin-local orchestrator. "
         f"Managed by shared/scripts/configure_schedule.py."
     )
 
 
-def install_openclaw_jobs(config: dict[str, Any], *, dry_run: bool = False) -> list[str]:
+def install_scheduler_jobs(config: dict[str, Any], *, dry_run: bool = False) -> list[str]:
     timezone_name = config.get("timezone")
     if not timezone_name:
         raise ValueError("Set a timezone before installing a scheduler backend.")
@@ -181,13 +183,13 @@ def install_openclaw_jobs(config: dict[str, Any], *, dry_run: bool = False) -> l
         enabled = bool(run_cfg.get("enabled"))
         if not enabled:
             if job:
-                command = ["openclaw", "cron", "remove", job["id"]]
+                command = [SCHEDULER_CMD, "cron", "remove", job["id"]]
                 summaries.append(_execute_or_describe(command, dry_run, f"remove {name}"))
             continue
 
         expr = cron_expr_for_time(run_cfg["time"], config.get("days", "weekdays"))
         base_command = [
-            "openclaw", "cron",
+            SCHEDULER_CMD, "cron",
             "edit" if job else "add",
         ]
         if job:
@@ -195,11 +197,11 @@ def install_openclaw_jobs(config: dict[str, Any], *, dry_run: bool = False) -> l
         base_command.extend(
             [
                 "--name", name,
-                "--description", openclaw_job_description(mode),
+                "--description", scheduler_job_description(mode),
                 "--cron", expr,
                 "--tz", timezone_name,
                 "--session", "isolated",
-                "--message", build_openclaw_message(mode),
+                "--message", build_scheduler_message(mode),
                 "--timeout-seconds", "900",
                 "--tools", "exec",
             ]
@@ -219,14 +221,14 @@ def install_openclaw_jobs(config: dict[str, Any], *, dry_run: bool = False) -> l
                 managed_jobs[mode] = job["id"]
 
     config["scheduler"] = {
-        "backend": "openclaw-cron" if any(config["runs"][mode]["enabled"] for mode in RUN_MODES) else "none",
+        "backend": "claude-cron" if any(config["runs"][mode]["enabled"] for mode in RUN_MODES) else "none",
         "updatedAt": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "managedJobs": managed_jobs,
     }
     return summaries
 
 
-def remove_openclaw_jobs(config: dict[str, Any], *, dry_run: bool = False) -> list[str]:
+def remove_scheduler_jobs(config: dict[str, Any], *, dry_run: bool = False) -> list[str]:
     existing = _existing_jobs_by_name()
     summaries: list[str] = []
     for mode in RUN_MODES:
@@ -234,7 +236,7 @@ def remove_openclaw_jobs(config: dict[str, Any], *, dry_run: bool = False) -> li
         job = existing.get(name)
         if not job:
             continue
-        command = ["openclaw", "cron", "remove", job["id"]]
+        command = [SCHEDULER_CMD, "cron", "remove", job["id"]]
         summaries.append(_execute_or_describe(command, dry_run, f"remove {name}"))
 
     config["scheduler"] = {
@@ -315,17 +317,17 @@ def build_parser() -> argparse.ArgumentParser:
     show_parser.add_argument("--json", action="store_true", help="Print raw JSON.")
 
     set_parser = subparsers.add_parser("set", help="Update schedule config and optionally install it.")
-    set_parser.add_argument("--tz", help="IANA timezone, for example America/Edmonton.")
+    set_parser.add_argument("--tz", help="IANA timezone, for example America/New_York.")
     set_parser.add_argument("--morning", help="HH:MM to enable morning, or 'off'.")
     set_parser.add_argument("--midday", help="HH:MM to enable midday, or 'off'.")
     set_parser.add_argument("--eod", help="HH:MM to enable eod, or 'off'.")
-    set_parser.add_argument("--install-openclaw", action="store_true", help="Install/update matching OpenClaw cron jobs.")
+    set_parser.add_argument("--install-scheduler", action="store_true", help="Install/update matching Claude cron jobs.")
     set_parser.add_argument("--dry-run", action="store_true", help="Preview scheduler changes without applying them.")
 
-    install_parser = subparsers.add_parser("install-openclaw", help="Install/update OpenClaw cron jobs from the current config.")
+    install_parser = subparsers.add_parser("install-scheduler", help="Install/update Claude cron jobs from the current config.")
     install_parser.add_argument("--dry-run", action="store_true", help="Preview scheduler changes without applying them.")
 
-    remove_parser = subparsers.add_parser("remove-openclaw", help="Remove managed OpenClaw cron jobs.")
+    remove_parser = subparsers.add_parser("remove-scheduler", help="Remove managed Claude cron jobs.")
     remove_parser.add_argument("--dry-run", action="store_true", help="Preview scheduler changes without applying them.")
 
     crontab_parser = subparsers.add_parser("render-crontab", help="Render portable crontab lines for the current config.")
@@ -350,8 +352,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "set":
             updated = apply_updates(config, args)
             summaries: list[str] = []
-            if args.install_openclaw:
-                summaries = install_openclaw_jobs(updated, dry_run=args.dry_run)
+            if args.install_scheduler:
+                summaries = install_scheduler_jobs(updated, dry_run=args.dry_run)
             if not args.dry_run:
                 save_config(updated)
             if summaries:
@@ -360,8 +362,8 @@ def main(argv: list[str] | None = None) -> int:
             print_text_summary(updated)
             return 0
 
-        if args.command == "install-openclaw":
-            summaries = install_openclaw_jobs(config, dry_run=args.dry_run)
+        if args.command == "install-scheduler":
+            summaries = install_scheduler_jobs(config, dry_run=args.dry_run)
             if not args.dry_run:
                 save_config(config)
             for line in summaries:
@@ -369,8 +371,8 @@ def main(argv: list[str] | None = None) -> int:
             print_text_summary(config)
             return 0
 
-        if args.command == "remove-openclaw":
-            summaries = remove_openclaw_jobs(config, dry_run=args.dry_run)
+        if args.command == "remove-scheduler":
+            summaries = remove_scheduler_jobs(config, dry_run=args.dry_run)
             if not args.dry_run:
                 save_config(config)
             for line in summaries:

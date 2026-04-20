@@ -20,12 +20,14 @@ import sys
 from dataclasses import asdict
 from pathlib import Path
 
-_PLUGIN_ROOT = Path(__file__).resolve().parents[2]
+_PLUGIN_ROOT = Path(__file__).resolve().parents[5]
+_IMPL_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
 _SHARED_SCRIPTS = _PLUGIN_ROOT / "shared" / "scripts"
 _DEFAULT_PROFILE = _PLUGIN_ROOT / "client-profile"
 
-if str(_SHARED_SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(_SHARED_SCRIPTS))
+for _p in (_IMPL_SCRIPTS, _SHARED_SCRIPTS):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 from health_check import HealthReport, run_checks  # noqa: E402
 

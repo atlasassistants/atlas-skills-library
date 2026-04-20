@@ -6,7 +6,7 @@
 
 A prep brief that the user never reads is worthless. The single best lever for ensuring prep gets used is to **carve out time on the calendar for it, immediately before the meeting**, with the prep content embedded right in the calendar event. That way the user opens the event, sees the prep, and reads it in the slot that's already protected.
 
-This came directly from how Colin's human EA operates. It's been validated in practice and is one of the highest-leverage habits in Atlas's meeting workflow.
+This came directly from how Atlas EAs operate. It's been validated in practice and is one of the highest-leverage habits in Atlas's meeting workflow.
 
 ## The mechanics
 

@@ -20,9 +20,11 @@ import sys
 from pathlib import Path
 
 # Import the shared Gmail client
-_SHARED_SCRIPTS = Path(__file__).resolve().parents[2] / "shared" / "scripts"
-if str(_SHARED_SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(_SHARED_SCRIPTS))
+_IMPL_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+_SHARED_SCRIPTS = Path(__file__).resolve().parents[5] / "shared" / "scripts"
+for _p in (_IMPL_SCRIPTS, _SHARED_SCRIPTS):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 from atlas_labels import ALL_ATLAS_LABELS
 from atlas_label_colors import color_for_label, label_has_color

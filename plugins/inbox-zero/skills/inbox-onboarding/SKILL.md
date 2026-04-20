@@ -68,7 +68,6 @@ Ask only the minimum required for skills to work correctly:
 1. **VIP contacts** → write to `client-profile/vip-contacts.md`
 2. **Team routing map** (who handles what) → write to `client-profile/team-delegation-map.md`
 3. **Label sweep rules** — present defaults, offer adjustments → `client-profile/label-sweep-rules.md`
-4. **Processing schedule** (only if scheduled operation is configured)
 
 Do not ask optional calibration questions during onboarding. Save those for later: reply voice convention, autonomy boundaries, custom escalation triggers, priority tiers, feedback loop.
 

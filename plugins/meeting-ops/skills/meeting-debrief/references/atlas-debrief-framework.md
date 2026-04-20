@@ -34,7 +34,7 @@ Things someone committed to doing. Every action item has:
 
 Action items are always split into **two sub-categories**:
 
-1. **User's action items** — things the user (Colin / whoever the meeting log belongs to) committed to
+1. **User's action items** — things the user (whoever the meeting log belongs to) committed to
 2. **Commitments from others** — things other people committed to
 
 This split is non-negotiable. It mirrors how the user actually thinks about a meeting and what they need to track.

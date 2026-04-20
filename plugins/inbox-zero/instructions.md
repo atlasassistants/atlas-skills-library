@@ -44,7 +44,6 @@ Run inbox onboarding.
 - Collects VIP contacts → `client-profile/vip-contacts.md`
 - Collects team routing map → `client-profile/team-delegation-map.md`
 - Confirms label sweep rules
-- Optionally configures a processing schedule
 
 Phase A and Phase B can be done in separate sessions. Onboarding is fully resumable.
 

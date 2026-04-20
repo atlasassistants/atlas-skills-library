@@ -7,9 +7,11 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-_SHARED_SCRIPTS = Path(__file__).resolve().parents[2] / "shared" / "scripts"
-if str(_SHARED_SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(_SHARED_SCRIPTS))
+_IMPL_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+_SHARED_SCRIPTS = Path(__file__).resolve().parents[5] / "shared" / "scripts"
+for _p in (_IMPL_SCRIPTS, _SHARED_SCRIPTS):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 import configure_schedule
 
@@ -104,8 +106,7 @@ def interactive_answers(config: dict[str, Any]) -> tuple[dict[str, str], bool]:
             "eod": "off",
         }, False
 
-    timezone_default = defaults["timezone"] or "America/Edmonton"
-    timezone_name = _prompt("Timezone (IANA, for example America/Edmonton)", default=timezone_default)
+    timezone_name = _prompt("Timezone (IANA, for example America/New_York)", default=defaults["timezone"] or None)
 
     answers = {
         "timezone": timezone_name,
@@ -114,20 +115,20 @@ def interactive_answers(config: dict[str, Any]) -> tuple[dict[str, str], bool]:
         "eod": _prompt(MODE_PROMPTS["eod"], default=defaults["eod"]),
     }
 
-    install_openclaw = False
-    if shutil.which("openclaw"):
-        install_openclaw = _yes_no("Install or update OpenClaw cron jobs now?", default=True)
+    install_scheduler = False
+    if shutil.which(configure_schedule.SCHEDULER_CMD):
+        install_scheduler = _yes_no("Install or update Claude cron jobs now?", default=True)
 
-    return answers, install_openclaw
+    return answers, install_scheduler
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Capture Atlas Inbox Zero schedule choices during onboarding.")
-    parser.add_argument("--tz", help="IANA timezone, for example America/Edmonton.")
+    parser.add_argument("--tz", help="IANA timezone, for example America/New_York.")
     parser.add_argument("--morning", help="HH:MM to enable morning, or 'off'.")
     parser.add_argument("--midday", help="HH:MM to enable midday, or 'off'.")
     parser.add_argument("--eod", help="HH:MM to enable end-of-day, or 'off'.")
-    parser.add_argument("--install-openclaw", action="store_true", help="Install or update OpenClaw cron jobs after saving the schedule.")
+    parser.add_argument("--install-scheduler", action="store_true", help="Install or update Claude cron jobs after saving the schedule.")
     parser.add_argument("--dry-run", action="store_true", help="Preview the result without writing files or creating jobs.")
     parser.add_argument("--interactive", action="store_true", help="Ask the schedule questions interactively.")
     return parser
@@ -143,7 +144,7 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     if interactive:
-        answers, install_openclaw = interactive_answers(config)
+        answers, install_scheduler = interactive_answers(config)
     else:
         answers = {
             "timezone": args.tz,
@@ -151,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
             "midday": args.midday,
             "eod": args.eod,
         }
-        install_openclaw = args.install_openclaw
+        install_scheduler = args.install_scheduler
 
     try:
         updated = apply_schedule_answers(
@@ -162,8 +163,8 @@ def main(argv: list[str] | None = None) -> int:
             eod=answers["eod"],
         )
         summaries: list[str] = []
-        if install_openclaw:
-            summaries = configure_schedule.install_openclaw_jobs(updated, dry_run=args.dry_run)
+        if install_scheduler:
+            summaries = configure_schedule.install_scheduler_jobs(updated, dry_run=args.dry_run)
         if not args.dry_run:
             configure_schedule.save_config(updated)
     except (RuntimeError, ValueError) as exc:
