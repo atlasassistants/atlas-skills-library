@@ -26,4 +26,7 @@ __pycache__/
 **/client-profile/exec-voice-guide.md
 **/client-profile/exec-preferences.md
 **/client-profile/sweep-schedule.json
+**/client-profile/inbox-audit.json
+**/client-profile/inbox-audit.md
+**/client-profile/label-plan.json
 **/logs/

@@ -60,13 +60,14 @@ After installing, complete the first-run setup before running any skill.
 
 ## Skills included
 
+- **`inbox-audit`** — *opinionated.* Runs before onboarding. Scans existing labels, filters, sent folder (for VIP candidates and exec voice), and inbox composition. Produces a report that drives every setup decision — adapts Atlas labels to fit the exec's existing system rather than replacing it.
+- **`inbox-onboarding`** — *neutral.* Two-phase setup wizard. Uses audit findings to pre-fill VIPs, voice guide, and label structure. Phase A: credentials, labels (adapted from audit), filters, Gmail UI, initial cleanup. Phase B: VIP contacts, team routing, sweep rules.
 - **`inbox-zero`** — *opinionated.* The orchestrator. Sequences all other skills in the right order based on time of day. Three modes: morning (full triage + follow-ups → SOD report), midday (quick escalation scan only), EOD (full triage + sweep + follow-ups → EOD report).
 - **`inbox-triage`** — *opinionated.* Core daily workflow. Processes every inbox email through the Atlas decision tree in bounded batches, applies exactly one label per message, drafts replies for Action Required items.
 - **`escalation-handler`** — *opinionated.* Runs first in every session. Detects legal threats, board urgencies, client crises, wire transfer requests, VIP messages. Tier 1 items surface immediately; Tier 2 in the report.
 - **`follow-up-tracker`** — *opinionated.* Manages the `3-Waiting For` queue. Applies cadences by category (revenue/internal/vendors), drafts follow-up messages in exec voice, escalates exhausted threads.
 - **`exec-voice-builder`** — *opinionated.* Extracts the exec's writing voice from their last 30 sent emails. Required before any drafting skill runs.
 - **`inbox-reporter`** — *opinionated.* Produces SOD and EOD reports from upstream skill output. Last skill in every chain.
-- **`inbox-onboarding`** — *neutral.* Two-phase setup wizard. Phase A: credentials, labels, filters, Gmail UI, initial cleanup. Phase B: VIP contacts, team routing, sweep rules.
 - **`health-check`** — *neutral.* Audits the client profile for drift — stale voice guide, template placeholders, empty VIP list. Runs as a pre-flight inside every orchestrator session.
 
 ## The 9 Atlas labels

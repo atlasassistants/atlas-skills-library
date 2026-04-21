@@ -1,25 +1,27 @@
 """
-Create the 9 Atlas Labels in Gmail
-===================================
-Creates every label the Atlas Inbox Zero system requires, with the EXACT names
-specified in atlas-inbox-rules.md Section 1. Names must not be changed — the
-entire plugin depends on these labels existing by these exact names.
+Create Atlas Labels in Gmail
+=============================
+Creates the Atlas Inbox Zero label set in Gmail. By default uses the
+standard 9 Atlas labels. If a label plan exists at
+client-profile/label-plan.json (written by the agent after inbox-audit),
+that plan is used instead — allowing sub-labels and adaptations based on
+the exec's existing inbox structure.
 
-Idempotent: rerunning the script creates missing labels and ensures Atlas label
-colors are applied to existing ones.
+Idempotent: rerunning creates missing labels and ensures Atlas colors are
+applied to existing ones.
 
 Usage:
     python create_labels.py
+    python create_labels.py --plan /path/to/label-plan.json
 
-Output:
-    Prints one line per label (created or already exists) and a final summary.
-    Exits 0 on success, 1 if any label failed to create.
+label-plan.json format:
+    {"labels": ["1-Action Required", "1-Action Required/Board", "8-Reference/Meetings", ...]}
 """
 
+import json
 import sys
 from pathlib import Path
 
-# Import the shared Gmail client
 _IMPL_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
 _SHARED_SCRIPTS = Path(__file__).resolve().parents[5] / "shared" / "scripts"
 for _p in (_IMPL_SCRIPTS, _SHARED_SCRIPTS):
@@ -29,32 +31,38 @@ for _p in (_IMPL_SCRIPTS, _SHARED_SCRIPTS):
 from atlas_labels import ALL_ATLAS_LABELS
 from atlas_label_colors import color_for_label, label_has_color
 from gmail_client import GmailClient
+from profile_paths import CLIENT_PROFILE_DIR
+
+DEFAULT_PLAN_PATH = CLIENT_PROFILE_DIR / "label-plan.json"
 
 
-ATLAS_LABELS: list[str] = list(ALL_ATLAS_LABELS)
+def load_label_plan(plan_path: Path | None = None) -> list[str]:
+    path = plan_path or DEFAULT_PLAN_PATH
+    if path and path.exists():
+        data = json.loads(path.read_text(encoding="utf-8"))
+        labels = data.get("labels", [])
+        if labels:
+            print(f"Using label plan from: {path} ({len(labels)} labels)")
+            return labels
+    print(f"No label plan found — using standard 9 Atlas labels.")
+    return list(ALL_ATLAS_LABELS)
+
+
+ATLAS_LABELS: list[str] = []  # populated in main() after args parsed
 
 
 def create_atlas_labels(
     client: GmailClient,
+    labels: list[str],
 ) -> tuple[list[str], list[str], list[str], list[tuple[str, str]]]:
-    """
-    Create every Atlas label in Gmail.
-
-    Returns a tuple of (created, recolored, already_correct, errors) where:
-        - created: names of labels newly created
-        - recolored: names of labels updated to Atlas colors
-        - already_correct: names of labels that already existed with the right colors
-        - errors: list of (label_name, error_message) for any failures
-    """
     created: list[str] = []
     recolored: list[str] = []
     already_correct: list[str] = []
     errors: list[tuple[str, str]] = []
 
-    # Pre-fetch existing labels once so we don't re-list on every change
     existing_by_name = {label["name"]: label for label in client.list_labels()}
 
-    for name in ATLAS_LABELS:
+    for name in labels:
         try:
             desired_color = color_for_label(name)
             existing = existing_by_name.get(name)
@@ -83,10 +91,17 @@ def create_atlas_labels(
     return created, recolored, already_correct, errors
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    import argparse
+    parser = argparse.ArgumentParser(description="Create Atlas labels in Gmail.")
+    parser.add_argument("--plan", type=Path, default=None, help="Path to label-plan.json from inbox-audit.")
+    args = parser.parse_args(argv)
+
+    labels = load_label_plan(args.plan)
+
     print("Atlas Inbox Zero — Label Setup")
     print("=" * 40)
-    print(f"Creating {len(ATLAS_LABELS)} labels...\n")
+    print(f"Creating {len(labels)} labels...\n")
 
     try:
         client = GmailClient()
@@ -98,7 +113,7 @@ def main() -> int:
     profile = client.get_profile()
     print(f"Connected as: {profile.get('emailAddress', 'unknown')}\n")
 
-    created, recolored, already_correct, errors = create_atlas_labels(client)
+    created, recolored, already_correct, errors = create_atlas_labels(client, labels)
 
     print()
     print("=" * 40)
@@ -116,7 +131,7 @@ def main() -> int:
             print(f"  - {name}: {err}")
         return 1
 
-    print("\nAll 9 Atlas labels are in place with Atlas colors applied.")
+    print(f"\nAll {len(labels)} labels are in place.")
     return 0
 
 

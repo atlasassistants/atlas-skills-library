@@ -1,7 +1,7 @@
 ---
 name: inbox-onboarding
 description: Two-phase setup wizard. Phase A configures the email system — credentials, the 9 Atlas labels, filters, UI settings, and initial inbox cleanup. Phase B builds the production profile — VIP contacts, team routing map, sweep rules. Resumable between sessions.
-when_to_use: Run once before any other inbox-zero skill. Trigger phrases: "set up inbox zero", "inbox zero onboarding", "configure inbox zero", "start inbox setup", "run inbox onboarding". Also triggered automatically when any skill detects that setup is incomplete.
+when_to_use: Run after inbox-audit, before any other inbox-zero skill. Trigger phrases: "set up inbox zero", "inbox zero onboarding", "configure inbox zero", "start inbox setup", "run inbox onboarding". Also triggered automatically when any skill detects that setup is incomplete. If no audit report exists at client-profile/inbox-audit.md, run inbox-audit first.
 atlas_methodology: neutral
 ---
 
@@ -40,14 +40,17 @@ Skip any completed step. If all markers exist, report onboarding complete.
 
 ### Phase A — Email system configuration
 
-1. **Environment audit.** Scan for existing labels and filters that could conflict with Atlas names. Present findings. Offer three migration modes:
-   - `keep_both` — leave existing labels, add Atlas ones alongside
-   - `migrate_labels` — rename existing to Atlas names where possible
-   - `clean_slate` — remove conflicting labels and filters (preview + approval required)
+1. **Load audit findings.** Check for `client-profile/inbox-audit.json` and `client-profile/label-plan.json`.
+   - **If audit exists:** read findings. Pre-fill VIP candidates, voice draft, and label plan from audit data. Skip re-scanning — the audit already did this.
+   - **If no audit:** surface this to the user and offer two options:
+     - **Option A — Run audit first (recommended).** Runs `inbox-audit`, which scans existing labels, filters, and sent folder to build an adapted setup. Takes a few minutes. Results in a label structure that fits the exec's actual inbox.
+     - **Option B — Skip audit, use standard labels.** Proceeds immediately with the default 9 Atlas labels and no pre-filled VIPs or voice guide. Faster, but the exec starts from scratch with no adaptation.
+     
+     Default to Option A unless the user explicitly chooses to skip.
 
-2. **Credentials and auth.** Run the configured implementation's credential setup (e.g., `implementations/gmail/scripts/setup_credentials.py`). Walk the user through creating API access, downloading credentials, and completing OAuth consent. Do not proceed until credentials are valid.
+2. **Credentials and auth.** Credentials should already exist if `inbox-audit` ran. Verify they are valid. If missing, run `implementations/gmail/scripts/setup_credentials.py`.
 
-3. **Create 9 Atlas labels.** Create all labels with exact names and the correct colors. Idempotent — safe to re-run if partial.
+3. **Create labels (adapted from audit).** Run `create_labels.py`. If `client-profile/label-plan.json` exists, it uses the adapted label structure from the audit automatically. If not, falls back to standard 9 Atlas labels. Idempotent — safe to re-run.
 
 4. **Configure email client settings.** Walk the user through any required manual settings in their email client (e.g., Gmail Multiple Inboxes, inbox type, reading pane). These cannot be automated — provide step-by-step instructions.
 
@@ -63,11 +66,11 @@ Touch `.cleanup-done` marker after Phase A completes.
 
 ### Phase B — Production profile
 
-Ask only the minimum required for skills to work correctly:
+Ask only the minimum required for skills to work correctly. Pre-fill from audit findings where available — only ask the exec to confirm or adjust, not to answer from scratch.
 
-1. **VIP contacts** → write to `client-profile/vip-contacts.md`
+1. **VIP contacts** — pre-fill from audit's top reply-to contacts. Confirm with exec, add any missing. → write to `client-profile/vip-contacts.md`
 2. **Team routing map** (who handles what) → write to `client-profile/team-delegation-map.md`
-3. **Label sweep rules** — present defaults, offer adjustments → `client-profile/label-sweep-rules.md`
+3. **Label sweep rules** — present defaults adapted to the label plan, offer adjustments → `client-profile/label-sweep-rules.md`
 
 Do not ask optional calibration questions during onboarding. Save those for later: reply voice convention, autonomy boundaries, custom escalation triggers, priority tiers, feedback loop.
 
