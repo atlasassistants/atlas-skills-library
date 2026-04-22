@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "daily-reporting/schemas/runtime-input",
+  "title": "Runtime Input",
+  "description": "Per-run input to the daily-reporting skill. Machine-readable mirror of references/schemas/runtime-input-schema.md. See ./MAINTAINING.md for sync discipline.",
+  "type": "object",
+  "$comment": "Runtime input should stay small. The skill uses saved deployment_config first, then applies one-run changes declared here. Only 'mode' is required.",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Schema version identifier. See ./MAINTAINING.md."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["sod", "eod"],
+      "description": "Which reporting cycle this run produces.",
+      "$comment": "Mode-check failure paths (enforced at skills/daily-reporting/SKILL.md Workflow step 2): missing/empty mode -> status: blocked with a validation_meta.warnings entry. Mode not in deployment_config.enabled_modes -> status: blocked. The skill must not silently default or substitute."
+    },
+    "report_date": {
+      "type": "string",
+      "description": "Optional ISO-8601 calendar date override (YYYY-MM-DD). When absent, resolved from current runtime time using the saved timezone.",
+      "$comment": "Constraints (see runtime-input-schema.md 'report_date constraints'): must not be later than the current local date unless allow_future_report_date is configured; must not overwrite an existing locked report for (mode, report_date, deployment) without an explicit override; a non-monotonic date surfaces a validation_meta.warnings entry. See ../policies/continuity-model.md 'Report date monotonicity' for the canonical rule."
+    },
+    "timezone": {
+      "type": "string",
+      "description": "Optional one-run IANA timezone override for report_date computation.",
+      "$comment": "Takes precedence over deployment_config.defaults.timezone for this run. The output SHOULD record both the saved timezone and the effective-at-runtime timezone so continuity across timezone shifts is traceable. See runtime-input-schema.md 'Timezone edge cases'."
+    },
+    "participants": {
+      "type": "array",
+      "description": "Optional one-run participants override. Uses the canonical participant shape declared in deployment-config-schema.md.",
+      "items": { "$ref": "#/$defs/participant" },
+      "$comment": "Canonical shape declared in deployment-config-schema.md 'Participants (canonical shape)'. Inlined here (as #/$defs/participant) to keep each JSON Schema file self-contained for validators that do not resolve cross-file $ref."
+    },
+    "source_overrides": {
+      "type": "object",
+      "description": "Optional per-source override of how a source is used for the current run only.",
+      "$comment": "Keyed by the six canonical source keys: calendar, email, tasks, meetings, prior_state, manual. Each entry may declare enabled, retrieval_window, use_manual_fallback, replace_with_manual. Blank or omitted fields must not erase unrelated connected-source results.",
+      "properties": {
+        "calendar": { "$ref": "#/$defs/source_override_calendar" },
+        "email": { "$ref": "#/$defs/source_override_email" },
+        "tasks": { "$ref": "#/$defs/source_override_tasks" },
+        "meetings": { "$ref": "#/$defs/source_override_meetings" },
+        "prior_state": { "$ref": "#/$defs/source_override_prior_state" },
+        "manual": { "$ref": "#/$defs/source_override_generic" }
+      },
+      "additionalProperties": false
+    },
+    "operator_notes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of short human notes for the current run."
+    },
+    "confirmed_priorities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of explicitly human-confirmed priorities.",
+      "$comment": "These enter merged_context.priorities at the top of the canonical ladder (see normalized-context-schema.md 'Merge rules')."
+    },
+    "manual_overrides": {
+      "type": "object",
+      "description": "Targeted manual override object for fields the human wants to set directly.",
+      "$comment": "Shape is defined canonically in normalized-context-schema.md §manual (recommended manual_overrides shape: priorities[], carryovers[], blockers[], dependencies[], risks[], notes_for_this_cycle[]). Overrides apply only to fields explicitly named in the payload; other fields are untouched.",
+      "properties": {
+        "priorities": { "type": "array", "items": { "type": "string" } },
+        "carryovers": { "type": "array", "items": { "type": "string" } },
+        "blockers": { "type": "array", "items": { "type": "string" } },
+        "dependencies": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "notes_for_this_cycle": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "allow_future_report_date": {
+      "type": "boolean",
+      "description": "When true, a report_date later than the current local date is permitted.",
+      "$comment": "Deployment-configured override flag referenced in 'report_date constraints' ('Future dates')."
+    },
+    "allow_overwrite_locked_report": {
+      "type": "boolean",
+      "description": "When true, re-running over an existing locked (mode, report_date, deployment) tuple is permitted.",
+      "$comment": "Deployment-configured override flag referenced in 'report_date constraints' ('Existing lock (overwrite)'). Without this flag, a silent overwrite under auto_locked is forbidden."
+    }
+  },
+  "required": ["mode"],
+  "additionalProperties": true,
+  "$defs": {
+    "owner_type": {
+      "type": "string",
+      "enum": ["exec", "ea", "assistant"],
+      "description": "Role identifier vocabulary. Canonical declaration lives in deployment-config-schema.md."
+    },
+    "participant": {
+      "type": "object",
+      "description": "Canonical participant shape mirror. Source-of-truth is deployment-config-schema.md.",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "owner_type": { "$ref": "#/$defs/owner_type" }
+      },
+      "required": ["name", "role", "owner_type"],
+      "additionalProperties": false
+    },
+    "source_override_generic": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "use_manual_fallback": { "type": "boolean" },
+        "replace_with_manual": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "source_override_calendar": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retrieval_window": {
+          "type": "string",
+          "enum": ["today", "today_plus_tomorrow_preview"],
+          "description": "Per-run calendar retrieval window override.",
+          "$comment": "Canonical vocabulary lives in deployment-config-schema.md 'Retrieval windows'."
+        },
+        "use_manual_fallback": { "type": "boolean" },
+        "replace_with_manual": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "source_override_email": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retrieval_window": {
+          "type": "string",
+          "enum": ["since_last_locked_eod", "today_unresolved_only"]
+        },
+        "use_manual_fallback": { "type": "boolean" },
+        "replace_with_manual": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "source_override_tasks": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retrieval_window": {
+          "type": "string",
+          "enum": ["active_executive_items_only", "today_plus_executive_carryforward_candidates"]
+        },
+        "use_manual_fallback": { "type": "boolean" },
+        "replace_with_manual": { "type": "boolean" }
+      },
+      "additionalProperties": true,
+      "$comment": "tasks overrides must not widen into a whole-team audit (see runtime-input-schema.md 'Rules')."
+    },
+    "source_override_meetings": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retrieval_window": {
+          "type": "string",
+          "enum": ["last_3_business_days_unresolved_only", "today_only"]
+        },
+        "use_manual_fallback": { "type": "boolean" },
+        "replace_with_manual": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "source_override_prior_state": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "retrieval_window": {
+          "type": "string",
+          "enum": ["most_recent_locked_eod", "current_day_locked_sod"]
+        },
+        "use_manual_fallback": { "type": "boolean" },
+        "replace_with_manual": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

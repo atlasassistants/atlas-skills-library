@@ -1,0 +1,69 @@
+{
+  "mode": "sod",
+  "report_date": "2026-04-21",
+  "timezone": "America/Edmonton",
+  "continuity_status": "available",
+  "participants": [
+    { "name": "Executive", "role": "Executive", "owner_type": "exec" },
+    { "name": "Operator", "role": "EA / Operator", "owner_type": "ea" },
+    { "name": "Assistant", "role": "Assistant / CoS", "owner_type": "assistant" }
+  ],
+  "source_family_results": {
+    "calendar": {
+      "calendar_summary": {
+        "key_events": ["Board prep block at 08:30", "Client renewal call at 13:00"],
+        "prep_items": ["Review KPI export before board prep"],
+        "collisions": [],
+        "focus_windows": ["08:30-10:00", "15:30-17:00"]
+      }
+    },
+    "email": {
+      "inbox_flags": {
+        "unresolved_threads": ["Partner scheduling thread from yesterday has no reply yet"],
+        "pending_decisions": ["Client renewal decision still needs finance confirmation"],
+        "urgent_followups": ["Reply needed on partner scheduling email"],
+        "executive_risks": ["Finance reply delay may affect renewal timing"]
+      }
+    },
+    "tasks": {
+      "priority_context": {
+        "current_priorities": ["Prepare board update", "Close renewal decision"],
+        "blockers": ["Waiting on final KPI export"],
+        "dependencies": ["Finance confirmation", "KPI export"],
+        "carryover_candidates": ["Finalize board update draft"],
+        "exec_relevant_support_work": ["Operator to prep board materials before first meeting"]
+      },
+      "task_snapshot": {
+        "active_items": ["Board update draft", "Client renewal follow-up"]
+      }
+    },
+    "prior_state": {
+      "prior_locked_state": {
+        "mode": "eod",
+        "report_date": "2026-04-20",
+        "carryovers": ["Re-check the renewal reply by midday", "Protect a board-prep block before meetings"],
+        "dependencies": ["Finance contact response", "Final KPI export"],
+        "risks": ["Late KPI export may compress prep time"],
+        "notes_for_next_cycle": ["Start the day with board prep before reactive work."]
+      }
+    },
+    "manual": {
+      "freeform_operator_notes": ["If KPI export lands late, shorten inbox work and protect board prep first."],
+      "confirmed_priorities": ["Prepare board update", "Close renewal decision"]
+    }
+  },
+  "merged_context": {
+    "priorities": ["Prepare board update", "Close renewal decision", "Protect board-prep block"],
+    "blockers": ["Waiting on final KPI export"],
+    "dependencies": ["Finance confirmation", "Final KPI export"],
+    "carryovers": ["Re-check the renewal reply by midday", "Protect a board-prep block before meetings"],
+    "unresolved_items": ["Renewal decision is still pending"],
+    "risks": ["Late KPI export may compress prep time"],
+    "schedule_signals": ["Board prep block at 08:30", "Client renewal call at 13:00"],
+    "inbox_signals": ["Reply needed on partner scheduling email", "Finance reply delay may affect renewal timing"],
+    "support_work": ["Operator to prep board materials before first meeting"],
+    "prep_items": ["Review KPI export before board prep"],
+    "proposed_focus": ["Start with board prep before reactive work, then push the renewal decision once the KPI export and finance confirmation land."],
+    "notes_for_next_cycle": ["If KPI export lands late, shorten inbox work and protect board prep first."]
+  }
+}

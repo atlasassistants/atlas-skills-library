@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "daily-reporting/schemas/normalized-context",
+  "title": "Normalized Context",
+  "description": "Clean handoff shape between source connectors and the daily-reporting main skill. Machine-readable mirror of references/schemas/normalized-context-schema.md. See ./MAINTAINING.md for sync discipline.",
+  "type": "object",
+  "$comment": "A client or tool may gather data however it wants, but the main skill works from this shape rather than raw source payloads.",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Schema version identifier. See ./MAINTAINING.md."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["sod", "eod"],
+      "description": "The reporting cycle this context is built for."
+    },
+    "report_date": {
+      "type": "string",
+      "description": "ISO-8601 calendar date (YYYY-MM-DD) this context describes."
+    },
+    "timezone": {
+      "type": "string",
+      "description": "Effective-at-runtime IANA timezone used to compute report_date."
+    },
+    "continuity_status": {
+      "type": "string",
+      "enum": ["available", "unavailable", "first_run"],
+      "description": "Whether a prior locked state was loaded for this cycle.",
+      "$comment": "See ../policies/continuity-model.md 'Continuity status vocabulary' for the rule distinguishing when each value applies."
+    },
+    "participants": {
+      "type": "array",
+      "description": "Optional participants array. Uses the canonical participant shape from deployment-config-schema.md.",
+      "items": { "$ref": "#/$defs/participant" }
+    },
+    "source_family_results": { "$ref": "#/$defs/source_family_results" },
+    "merged_context": { "$ref": "#/$defs/merged_context" }
+  },
+  "required": ["mode", "report_date", "timezone", "continuity_status", "source_family_results", "merged_context"],
+  "additionalProperties": true,
+  "$defs": {
+    "owner_type": {
+      "type": "string",
+      "enum": ["exec", "ea", "assistant"],
+      "description": "Role identifier vocabulary. Canonical declaration lives in deployment-config-schema.md."
+    },
+    "participant": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "owner_type": { "$ref": "#/$defs/owner_type" }
+      },
+      "required": ["name", "role", "owner_type"],
+      "additionalProperties": false
+    },
+    "string_list": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "source_family_results": {
+      "type": "object",
+      "description": "Keyed by the six canonical source keys. Each entry is optional (a source that did not contribute may be absent or empty).",
+      "properties": {
+        "calendar": {
+          "type": "object",
+          "properties": {
+            "calendar_summary": { "$ref": "#/$defs/calendar_summary" }
+          },
+          "additionalProperties": true
+        },
+        "email": {
+          "type": "object",
+          "properties": {
+            "inbox_flags": { "$ref": "#/$defs/inbox_flags" }
+          },
+          "additionalProperties": true
+        },
+        "tasks": {
+          "type": "object",
+          "properties": {
+            "priority_context": { "$ref": "#/$defs/priority_context" },
+            "task_snapshot": { "$ref": "#/$defs/task_snapshot" }
+          },
+          "additionalProperties": true
+        },
+        "meetings": {
+          "type": "object",
+          "properties": {
+            "meeting_note_summaries": { "$ref": "#/$defs/meeting_note_summaries" }
+          },
+          "additionalProperties": true
+        },
+        "prior_state": {
+          "type": "object",
+          "properties": {
+            "prior_locked_state": { "$ref": "#/$defs/prior_locked_state" }
+          },
+          "additionalProperties": true
+        },
+        "manual": { "$ref": "#/$defs/manual_source" }
+      },
+      "additionalProperties": false,
+      "$comment": "Use source keys only - do not use connector names as keys here."
+    },
+    "calendar_summary": {
+      "type": "object",
+      "description": "calendar source contribution.",
+      "properties": {
+        "key_events": { "$ref": "#/$defs/string_list" },
+        "prep_items": { "$ref": "#/$defs/string_list" },
+        "collisions": { "$ref": "#/$defs/string_list" },
+        "focus_windows": { "$ref": "#/$defs/string_list" },
+        "tomorrow_preview": { "$ref": "#/$defs/string_list" }
+      },
+      "additionalProperties": true
+    },
+    "inbox_flags": {
+      "type": "object",
+      "description": "email source contribution.",
+      "properties": {
+        "unresolved_threads": { "$ref": "#/$defs/string_list" },
+        "pending_decisions": { "$ref": "#/$defs/string_list" },
+        "urgent_followups": { "$ref": "#/$defs/string_list" },
+        "executive_risks": { "$ref": "#/$defs/string_list" }
+      },
+      "additionalProperties": true
+    },
+    "priority_context": {
+      "type": "object",
+      "description": "tasks source contribution - priority-oriented view.",
+      "properties": {
+        "current_priorities": { "$ref": "#/$defs/string_list" },
+        "blockers": { "$ref": "#/$defs/string_list" },
+        "dependencies": { "$ref": "#/$defs/string_list" },
+        "carryover_candidates": { "$ref": "#/$defs/string_list" },
+        "exec_relevant_support_work": { "$ref": "#/$defs/string_list" }
+      },
+      "required": ["current_priorities"],
+      "additionalProperties": true,
+      "$comment": "current_priorities is the only non-optional sub-field in the markdown ('- current_priorities[]' with no '?')."
+    },
+    "task_snapshot": {
+      "type": "object",
+      "description": "tasks source contribution - snapshot view.",
+      "properties": {
+        "active_items": { "$ref": "#/$defs/string_list" },
+        "completed_today": { "$ref": "#/$defs/string_list" },
+        "stalled_items": { "$ref": "#/$defs/string_list" }
+      },
+      "additionalProperties": true
+    },
+    "meeting_note_summaries": {
+      "type": "object",
+      "description": "meetings source contribution.",
+      "properties": {
+        "decisions": { "$ref": "#/$defs/string_list" },
+        "followups": { "$ref": "#/$defs/string_list" },
+        "blockers": { "$ref": "#/$defs/string_list" },
+        "dependencies": { "$ref": "#/$defs/string_list" },
+        "owner_actions": { "$ref": "#/$defs/string_list" }
+      },
+      "additionalProperties": true
+    },
+    "prior_locked_state": {
+      "type": "object",
+      "description": "prior_state source contribution.",
+      "properties": {
+        "mode": { "type": "string", "enum": ["sod", "eod"] },
+        "report_date": { "type": "string" },
+        "priorities": { "$ref": "#/$defs/string_list" },
+        "carryovers": { "$ref": "#/$defs/string_list" },
+        "dependencies": { "$ref": "#/$defs/string_list" },
+        "risks": { "$ref": "#/$defs/string_list" },
+        "unresolved_items": { "$ref": "#/$defs/string_list" },
+        "notes_for_next_cycle": { "$ref": "#/$defs/string_list" }
+      },
+      "required": ["mode", "report_date"],
+      "additionalProperties": true,
+      "$comment": "mode and report_date are the only non-optional sub-fields in the markdown ('- mode' and '- report_date' with no '?')."
+    },
+    "manual_source": {
+      "type": "object",
+      "description": "manual source contribution.",
+      "properties": {
+        "freeform_operator_notes": { "$ref": "#/$defs/string_list" },
+        "confirmed_priorities": { "$ref": "#/$defs/string_list" },
+        "manual_overrides": { "$ref": "#/$defs/manual_overrides" }
+      },
+      "additionalProperties": true
+    },
+    "manual_overrides": {
+      "type": "object",
+      "description": "Recommended manual_overrides shape. Also referenced as the canonical shape by runtime-input-schema.md.",
+      "properties": {
+        "priorities": { "$ref": "#/$defs/string_list" },
+        "carryovers": { "$ref": "#/$defs/string_list" },
+        "blockers": { "$ref": "#/$defs/string_list" },
+        "dependencies": { "$ref": "#/$defs/string_list" },
+        "risks": { "$ref": "#/$defs/string_list" },
+        "notes_for_this_cycle": { "$ref": "#/$defs/string_list" }
+      },
+      "additionalProperties": true
+    },
+    "merged_context": {
+      "type": "object",
+      "description": "Executive-centered working set used to draft the report.",
+      "$comment": "All fields except priorities[] are technically optional. 'Mode-specific expectations' in normalized-context-schema.md describes which SHOULD be populated per mode for substantive reports. Field derivation rules (per-field precedence + dedup formula) are also in the markdown.",
+      "properties": {
+        "priorities": {
+          "$ref": "#/$defs/string_list",
+          "description": "Required. Canonical ladder in ../policies/retrieval-rules.md ('Source Priority'); deduped by case-insensitive string equivalence."
+        },
+        "blockers": { "$ref": "#/$defs/string_list" },
+        "dependencies": { "$ref": "#/$defs/string_list" },
+        "carryovers": { "$ref": "#/$defs/string_list" },
+        "completed_items": {
+          "$ref": "#/$defs/string_list",
+          "description": "EOD-only. Copy verbatim from tasks.task_snapshot.completed_today."
+        },
+        "unresolved_items": { "$ref": "#/$defs/string_list" },
+        "risks": { "$ref": "#/$defs/string_list" },
+        "schedule_signals": { "$ref": "#/$defs/string_list" },
+        "inbox_signals": { "$ref": "#/$defs/string_list" },
+        "meeting_signals": { "$ref": "#/$defs/string_list" },
+        "support_work": { "$ref": "#/$defs/string_list" },
+        "prep_items": {
+          "$ref": "#/$defs/string_list",
+          "description": "SOD-only. Copy verbatim from calendar.calendar_summary.prep_items."
+        },
+        "proposed_focus": {
+          "$ref": "#/$defs/string_list",
+          "description": "SOD-only. Synthesized one-line recommendation(s) for the day's focus; template slot {{proposed_focus_statement}} reads from this field."
+        },
+        "planned_priorities": {
+          "$ref": "#/$defs/string_list",
+          "description": "EOD-only. Copy verbatim from source_family_results.prior_state.prior_locked_state.priorities."
+        },
+        "stalled_items": {
+          "$ref": "#/$defs/string_list",
+          "description": "EOD-relevant. Copy verbatim from source_family_results.tasks.task_snapshot.stalled_items."
+        },
+        "next_cycle_focus": {
+          "$ref": "#/$defs/string_list",
+          "description": "EOD-only. Forward-looking priorities for tomorrow's SOD."
+        },
+        "notes_for_next_cycle": { "$ref": "#/$defs/string_list" }
+      },
+      "required": ["priorities"],
+      "additionalProperties": true
+    }
+  }
+}

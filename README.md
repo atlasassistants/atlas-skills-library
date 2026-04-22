@@ -13,6 +13,7 @@ Plugins live under `plugins/`. Each one is independently installable via the Cla
 - [`presentation-builder`](plugins/presentation-builder/) — build polished self-contained HTML slide decks with branded styling
 - [`proactive-actions`](plugins/proactive-actions/) — classify and execute meeting action items autonomously after debriefs
 - [`travel-prep`](plugins/travel-prep/) — proactive travel preparation, pre-trip briefings, and day-of support
+- [`daily-reporting`](plugins/daily-reporting/) — start-of-day planning and end-of-day closeout with continuity handoff, review/locking, and connector-agnostic source handling
 
 ## Installing a plugin
 

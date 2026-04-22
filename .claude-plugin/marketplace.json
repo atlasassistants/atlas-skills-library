@@ -46,6 +46,13 @@
       "description": "Proactive travel preparation for executive travelers — onboarding, pre-trip briefings, and day-of support.",
       "version": "0.1.0",
       "tags": ["travel", "executive", "calendar", "briefings", "logistics"]
+    },
+    {
+      "name": "daily-reporting",
+      "source": "./plugins/daily-reporting",
+      "description": "Executive daily reporting — start-of-day planning and end-of-day closeout with continuity handoff, review/locking rules, and connector-agnostic source handling.",
+      "version": "0.1.0",
+      "tags": ["reporting", "executive", "daily", "productivity", "planning"]
     }
   ]
 }

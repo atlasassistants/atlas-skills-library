@@ -1,0 +1,41 @@
+{
+  "mode": "sod",
+  "report_date": "2026-04-21",
+  "timezone": "America/Edmonton",
+  "status": "final",
+  "report_stage": "locked",
+  "finalization_mode": "reviewed_locked",
+  "human_readable_report": "Daily Start of Day - 2026-04-21\n\n**Today's shape**\n- Board prep block at 08:30\n- Client renewal call at 13:00\n- Review KPI export before board prep\n\n**Top priorities**\n1. Prepare board update\n2. Close renewal decision\n3. Protect board-prep block\n\n**Why these matter today**\n- Board prep and renewal timing both affect near-term executive commitments.\n\n**Carryovers / open loops**\n- Re-check the renewal reply by midday\n- Protect a board-prep block before meetings\n\n**Blockers and dependencies**\n- Waiting on final KPI export\n- Finance confirmation\n\n**Inbox and decision flags**\n- Reply needed on partner scheduling email\n- Finance reply delay may affect renewal timing\n\n**Support work affecting executive execution**\n- Operator to prep board materials before first meeting\n\n**Watchouts**\n- Late KPI export may compress prep time\n\n**Proposed lock-in**\n- Start with board prep before reactive work, then push the renewal decision once the KPI export and finance confirmation land.\n\n**Notes for next cycle**\n- If KPI export lands late, shorten inbox work and protect board prep first.",
+  "structured_state": {
+    "mode": "sod",
+    "report_date": "2026-04-21",
+    "timezone": "America/Edmonton",
+    "status": "final",
+    "report_stage": "locked",
+    "finalization_mode": "reviewed_locked",
+    "confirmed_by": "Operator",
+    "confirmed_role": "ea",
+    "confirmed_at": "2026-04-21T08:02:00-06:00",
+    "locked_at": "2026-04-21T08:02:05-06:00",
+    "participants": [
+      { "name": "Executive", "role": "Executive", "owner_type": "exec" },
+      { "name": "Operator", "role": "EA / Operator", "owner_type": "ea" },
+      { "name": "Assistant", "role": "Assistant / CoS", "owner_type": "assistant" }
+    ],
+    "priorities": ["Prepare board update", "Close renewal decision", "Protect board-prep block"],
+    "carryovers": ["Re-check the renewal reply by midday", "Protect a board-prep block before meetings"],
+    "dependencies": ["Finance confirmation", "Final KPI export"],
+    "risks": ["Late KPI export may compress prep time"],
+    "unresolved_items": ["Renewal decision is still pending"],
+    "notes_for_next_cycle": ["If KPI export lands late, shorten inbox work and protect board prep first."]
+  },
+  "delivery_meta": {
+    "review_destination": "review-surface",
+    "final_destination": "final-destination"
+  },
+  "validation_meta": {
+    "schema_version": "1.0",
+    "warnings": [],
+    "continuity_status": "available"
+  }
+}

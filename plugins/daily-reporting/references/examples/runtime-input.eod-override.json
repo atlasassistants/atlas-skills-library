@@ -1,0 +1,28 @@
+{
+  "mode": "eod",
+  "report_date": "2026-04-20",
+  "operator_notes": [
+    "Executive ended the day with one unresolved client follow-up.",
+    "Tomorrow's first meeting needs a prep reminder in the draft."
+  ],
+  "confirmed_priorities": [
+    "Carry forward the client renewal decision",
+    "Prepare tomorrow's board update"
+  ],
+  "source_overrides": {
+    "manual": {
+      "enabled": true,
+      "use_manual_fallback": true
+    },
+    "email": {
+      "enabled": true,
+      "retrieval_window": "today_unresolved_only",
+      "replace_with_manual": false
+    }
+  },
+  "manual_overrides": {
+    "notes_for_this_cycle": [
+      "Tomorrow's first meeting needs a prep reminder in the draft."
+    ]
+  }
+}

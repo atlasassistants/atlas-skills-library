@@ -1,0 +1,134 @@
+{
+  "version": "1.0",
+  "plugin_name": "daily-reporting",
+  "deployment_name": "executive-daily-reporting-demo",
+  "deployment_mode": "connected",
+  "enabled_modes": ["sod", "eod"],
+  "defaults": {
+    "timezone": "America/Edmonton",
+    "participants": [
+      { "name": "Executive", "role": "Executive", "owner_type": "exec" },
+      { "name": "Operator", "role": "EA / Operator", "owner_type": "ea" },
+      { "name": "Assistant", "role": "Assistant / CoS", "owner_type": "assistant" }
+    ],
+    "continuity_store": {
+      "type": "file_archive",
+      "human_readable_reports_path": "reports/daily/",
+      "structured_state_path": "reports/state/",
+      "allow_draft_continuity": false
+    },
+    "delivery_policy": {
+      "draft_destination": "review-surface",
+      "final_destination": "final-destination",
+      "send_revisions_to_review_surface": true,
+      "send_only_locked_finals_to_final_destination": true
+    },
+    "review_policy": {
+      "finalization_mode": "reviewed_locked",
+      "review_required": true,
+      "confirmation_required": true,
+      "can_review": ["ea", "exec"],
+      "can_confirm": ["ea", "exec"],
+      "same_person_may_review_and_confirm": true,
+      "material_edits_require_reconfirmation": true,
+      "non_material_edits_require_reconfirmation": false,
+      "correction_from_authorized_confirmer_implies_confirmation": false,
+      "auto_send_after_generation": false,
+      "auto_lock_after_generation": false,
+      "send_only_reports_create_continuity": false
+    },
+    "retrieval_policy": {
+      "use_delegated_retrieval_when_available": true,
+      "prefer_normalized_summaries": true,
+      "allow_raw_transcripts_by_default": false,
+      "executive_scope_only": true
+    },
+    "retrieval_windows": {
+      "sod": {
+        "calendar": "today",
+        "email": "since_last_locked_eod",
+        "tasks": "active_executive_items_only",
+        "meetings": "last_3_business_days_unresolved_only",
+        "prior_state": "most_recent_locked_eod"
+      },
+      "eod": {
+        "calendar": "today_plus_tomorrow_preview",
+        "email": "today_unresolved_only",
+        "tasks": "today_plus_executive_carryforward_candidates",
+        "meetings": "today_only",
+        "prior_state": "current_day_locked_sod"
+      }
+    }
+  },
+  "source_map": {
+    "calendar": {
+      "enabled": true,
+      "provider": "google-calendar",
+      "input_domains": ["calendar_summary"],
+      "authority": "authoritative"
+    },
+    "email": {
+      "enabled": true,
+      "provider": "gmail",
+      "input_domains": ["inbox_flags"],
+      "authority": "supporting"
+    },
+    "tasks": {
+      "enabled": true,
+      "provider": "executive-workflow",
+      "input_domains": ["priority_context", "task_snapshot"],
+      "authority": "authoritative",
+      "scope_rule": "executive_workflow_only"
+    },
+    "meetings": {
+      "enabled": true,
+      "provider": "meeting-notes",
+      "input_domains": ["meeting_note_summaries"],
+      "authority": "supporting"
+    },
+    "prior_state": {
+      "enabled": true,
+      "provider": "prior-state",
+      "input_domains": ["prior_locked_state"],
+      "authority": "authoritative"
+    },
+    "manual": {
+      "enabled": true,
+      "provider": "manual",
+      "input_domains": ["freeform_operator_notes", "confirmed_priorities", "manual_overrides"],
+      "authority": "fallback"
+    }
+  },
+  "connector_settings": {
+    "google-calendar": { "enabled": true },
+    "outlook-calendar": { "enabled": false },
+    "gmail": {
+      "enabled": true,
+      "budget": 8,
+      "filtering_overrides": { "vip_senders_only": false },
+      "high_signal_labels": ["Needs Action", "Urgent", "Important"],
+      "vip_senders": ["board@example.com", "ceo@example.com"]
+    },
+    "executive-workflow": {
+      "enabled": true,
+      "scope_rule": "executive_workflow_only",
+      "include_support_work_only_if_exec_relevant": true
+    },
+    "meeting-notes": {
+      "enabled": true,
+      "unresolved_only": true,
+      "action_relevant_only": true
+    },
+    "prior-state": {
+      "enabled": true,
+      "prefer_structured_state": true,
+      "allow_draft_continuity": false
+    },
+    "manual": { "enabled": true }
+  },
+  "validation_status": {
+    "configured": true,
+    "last_validated_at": "2026-04-20T13:30:00-06:00",
+    "blocking_issues": []
+  }
+}
