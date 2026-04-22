@@ -19,11 +19,11 @@ Marketplace source of truth: `.claude-plugin/marketplace.json` at the repo root.
 
 ## Architecture: how plugins are structured
 
-Every plugin under `plugins/<plugin-name>/` follows this shape:
+Public (live) plugins live under `plugins/<plugin-name>/`. Plugins in team testing live under `team-test/<plugin-name>/` and are not listed in the marketplace manifest. Retired plugins live under `deprecated/<plugin-name>/`. All three folders share the same internal layout:
 
 ```
-plugins/<plugin-name>/
-├── .claude-plugin/plugin.json     # name, version, description, tier, tags
+<folder>/<plugin-name>/
+├── .claude-plugin/plugin.json     # name, version, description, tags
 ├── README.md                      # 10-section user-facing doc (see below)
 ├── skills/
 │   └── <skill-name>/
@@ -34,7 +34,7 @@ plugins/<plugin-name>/
 └── client-profile/                # optional — templates for per-client state files
 ```
 
-`plugin.json` declares `tier`: either `lightweight` (reviewed + smoke-tested) or `validated` (also passed eval-based review).
+The folder a plugin lives in is the source of truth for its lifecycle phase. See [`docs/skill-lifecycle.md`](docs/skill-lifecycle.md) for the full phase model.
 
 ## Skill authoring contract
 
@@ -81,13 +81,16 @@ Missing or empty sections block merge. If a section genuinely doesn't apply, say
 
 ## Adding a new plugin
 
-1. Create `plugins/<plugin-name>/` following the directory shape above.
-2. Write `plugin.json` — mirror an existing plugin's manifest structure.
-3. Add an entry to `.claude-plugin/marketplace.json`.
+1. Create a working branch.
+2. Create `team-test/<plugin-name>/` following the directory shape above. New plugins enter the repo in `team-test/`, not `plugins/`.
+3. Write `plugin.json` — mirror an existing plugin's manifest structure.
 4. Author each skill's `SKILL.md` — description must be trigger-rich; `when_to_use` must name at least three concrete triggers.
 5. Write the README covering all 10 required sections.
 6. Run a real smoke test on a real input (not a toy example) and paste results in the PR.
-7. Open a PR using `.github/PULL_REQUEST_TEMPLATE.md`.
+7. Open a PR against `main` using `.github/PULL_REQUEST_TEMPLATE.md`.
+8. After merge, the plugin is in Team Test — another Atlas teammate uses it on real work before it can be promoted to `plugins/`. Promotion is a separate PR. See [`docs/skill-lifecycle.md`](docs/skill-lifecycle.md).
+
+Do **not** add the plugin to `.claude-plugin/marketplace.json` in the initial PR. The marketplace manifest is updated only during the promotion PR, when the plugin moves from `team-test/` to `plugins/`.
 
 ## Portability rule
 
@@ -97,5 +100,5 @@ Skills must work outside Claude Code. Any agent runtime should be able to load a
 
 - One Atlas reviewer required to merge.
 - The PR template (`PULL_REQUEST_TEMPLATE.md`) is the checklist — use it.
-- Lightweight tier is the default for all new work. Validated tier is a separate promotion PR.
+- New plugins merge into `team-test/`. Promotion from `team-test/` to `plugins/` is a separate PR that also updates `marketplace.json` and documents the teammate validation.
 - Smoke test results (real input, real output, honest assessment) are required in the PR description — reviewers will push back on missing or obviously synthetic tests.

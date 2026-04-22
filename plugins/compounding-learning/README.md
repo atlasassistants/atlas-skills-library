@@ -1,7 +1,7 @@
 # compounding-learning
 
 > Capture skills, insights, and patterns during work — never solve the same problem twice.
-> v0.1.0 — `lightweight` tier.
+> v0.1.0
 
 ## What it does
 

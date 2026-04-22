@@ -1,7 +1,7 @@
 # presentation-builder
 
 > Build polished, self-contained HTML slide decks that work in any browser and navigate with arrow keys.
-> v0.1.0 — `lightweight` tier.
+> v0.1.0
 
 ## What it does
 

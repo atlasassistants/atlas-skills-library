@@ -10,10 +10,10 @@ External contributions are welcome on a case-by-case basis. If you're not on the
 
 ## 2. Plugin layout
 
-Every plugin follows the same directory shape:
+Every plugin follows the same directory shape regardless of which lifecycle folder it lives in:
 
 ```
-plugins/<plugin-name>/
+<folder>/<plugin-name>/
 ├── .claude-plugin/
 │   └── plugin.json
 ├── README.md
@@ -24,22 +24,25 @@ plugins/<plugin-name>/
             └── atlas-<topic>-methodology.md
 ```
 
-- `.claude-plugin/plugin.json` — plugin manifest. Includes `name`, `description`, `version`, `tier` (`lightweight` or `validated`), and any capability metadata.
+`<folder>` is one of `plugins/` (live), `team-test/` (in team testing, not public), or `deprecated/` (retired). New plugins enter the repo in `team-test/` and get promoted to `plugins/` in a separate PR once an Atlas teammate has validated them. See [`skill-lifecycle.md`](skill-lifecycle.md).
+
+- `.claude-plugin/plugin.json` — plugin manifest. Includes `name`, `description`, `version`, `tags`, and any capability metadata.
 - `README.md` — user-facing plugin documentation. Must cover all 10 standard sections (see below).
 - `skills/<skill-name>/SKILL.md` — the skill itself, with YAML frontmatter and skill body.
 - `skills/<skill-name>/references/` — optional folder of reference docs loaded by the skill via progressive disclosure. Opinionated skills typically ship methodology references here.
 
-`meeting-ops/` is the canonical v1 example. It may not exist at the moment you read this — it's built alongside these docs — but once it lands, use it as the reference shape for your own plugin.
+Use `plugins/meeting-ops/` as the canonical reference shape for your own plugin.
 
 ## 3. Authoring flow
 
-Five concrete steps from idea to PR:
+Six concrete steps from idea to PR:
 
-1. **Scaffold the plugin.** Run the `plugin-dev:create-plugin` workflow. It sets up `plugin.json`, the skills directory, and the README skeleton.
-2. **Author each skill.** Use `skill-creator` to draft SKILL.md. This ensures the description is trigger-rich, the `when_to_use` is specific, and the body follows progressive-disclosure conventions.
-3. **Fill out the plugin README.** Use the 10-section template in section 4 below. Do not ship a README with empty sections — if a section genuinely doesn't apply, say so explicitly and why.
-4. **Run the lightweight gate locally.** This is not a script — it's a discipline. Have `skill-creator` review each skill, then run a real smoke test on a real input (a real meeting, a real inbox item, whatever the skill operates on). Keep the output so you can paste it into the PR description.
-5. **Open a PR.** Use the PR template. Fill in the smoke test results. Request review from one Atlas reviewer.
+1. **Create a working branch** in this repo.
+2. **Scaffold the plugin under `team-test/<plugin-name>/`.** Run the `plugin-dev:create-plugin` workflow to set up `plugin.json`, the skills directory, and the README skeleton. New plugins enter the repo in `team-test/`, not `plugins/`.
+3. **Author each skill.** Use `skill-creator` to draft SKILL.md. This ensures the description is trigger-rich, the `when_to_use` is specific, and the body follows progressive-disclosure conventions.
+4. **Fill out the plugin README.** Use the 10-section template in section 4 below. Do not ship a README with empty sections — if a section genuinely doesn't apply, say so explicitly and why.
+5. **Self-test.** Have `skill-creator` review each skill, then run a real smoke test on a real input (a real meeting, a real inbox item, whatever the skill operates on). Keep the output to paste into the PR.
+6. **Open a PR against `main`.** Use the PR template. Fill in the smoke test results. Request review from one Atlas reviewer. Do **not** add the plugin to `.claude-plugin/marketplace.json` in this PR — that happens later, in the promotion PR.
 
 ## 4. Plugin README template
 
@@ -86,9 +89,9 @@ Skills in this library must be readable by non–Claude-Code agents. Atlas runs 
 
 The only exception is when a plugin is genuinely Claude-Code-only (because it relies on a specific command or hook). In that case, mark the plugin accordingly in `plugin.json` and document it in the README. Full guidance: [`using-outside-claude-code.md`](using-outside-claude-code.md).
 
-## 8. Quality gate (lightweight)
+## 8. Merge gate (self-test)
 
-Every plugin and skill ships at the `lightweight` tier by default. The gate is operationally simple:
+Every new plugin PR must clear the same bar before it can merge into `team-test/`:
 
 - `skill-creator` review passes for each skill (description quality, progressive disclosure, structure).
 - The author runs a real smoke test on a real input — not a toy example, not a hypothetical.
@@ -96,11 +99,20 @@ Every plugin and skill ships at the `lightweight` tier by default. The gate is o
 
 No automation enforces this. It's a discipline, and reviewers will push back if the smoke test is missing or obviously synthetic.
 
-## 9. Validated tier
+## 9. Team test and promotion to Live
 
-A separate, higher tier called `validated` exists for plugins that have passed eval-based review. Promotion is a distinct PR that adds 3–5 representative eval cases per skill, runs the eval with variance analysis, and flips `"tier": "validated"` in `plugin.json`.
+Once merged to `team-test/`, a plugin is not yet publicly installable — it is invisible to the marketplace until it is promoted. The Team Test phase exists so at least one non-author Atlas teammate runs the plugin on real work before clients ever see it.
 
-The validated tier is **not required** for merge. It's a trust signal for clients who want extra confidence. Full details: [`validation-badge.md`](validation-badge.md).
+Promotion from `team-test/` to `plugins/` is a **separate PR**, not bundled with any other change. The promotion PR:
+
+- Moves the plugin folder: `git mv team-test/<plugin> plugins/<plugin>`.
+- Adds a plugin entry to `.claude-plugin/marketplace.json`.
+- Documents the teammate validation in the PR description — who ran it, on what work, whether the outcome was good.
+- Gets product-team review.
+
+Updating an already-live plugin follows the same flow: the new version lands in `team-test/<plugin>/` (while the current version stays live in `plugins/<plugin>/`), a non-author teammate validates it, and the promotion PR replaces the live folder and bumps the `version` field in `plugin.json`. See [`skill-lifecycle.md`](skill-lifecycle.md) §7.
+
+Full lifecycle model: [`skill-lifecycle.md`](skill-lifecycle.md).
 
 ## 10. PR checklist
 
@@ -115,19 +127,20 @@ When you open a PR, the template will present this checklist. It's reproduced he
 
 **Plugin / skill authoring checklist**
 - [ ] Follows standard layout (plugin.json, README with all required sections, SKILL.md per skill)
+- [ ] Plugin lives under the correct folder for the target phase (`team-test/` for new work, `plugins/` only for promotion PRs)
 - [ ] Each skill description is trigger-rich per skill-creator standards
 - [ ] Methodology stance declared for each skill (`opinionated` or `neutral`)
 - [ ] Required capabilities listed abstractly — no hardcoded tool names in skill bodies
 - [ ] Plugin README covers all 10 standard sections
-- [ ] Marketplace manifest updated (if new plugin)
+- [ ] Marketplace manifest updated **only** for promotion PRs (Team Test → Live)
 
-**Quality gate**
+**Self-test gate**
 - [ ] skill-creator review passed
 - [ ] Smoke test run on real input — results pasted in PR description
 
-**Tier**
-- [ ] `lightweight` (default for new work)
-- [ ] `validated` (separate promotion PR — include eval results)
+**Target phase**
+- [ ] Merge to `team-test/` (new plugin or update to a team-test plugin)
+- [ ] Promotion to `plugins/` (separate PR — include teammate validation evidence)
 
 ## 11. One-reviewer rule
 

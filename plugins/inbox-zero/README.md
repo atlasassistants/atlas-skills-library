@@ -1,7 +1,7 @@
 # inbox-zero
 
 > Daily inbox management — triage, escalation detection, follow-up cadences, voice-matched drafts, SOD/EOD reports.
-> v0.1.0 — `heavyweight` tier.
+> v0.1.0
 
 ## What it does
 

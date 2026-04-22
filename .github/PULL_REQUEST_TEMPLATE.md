@@ -19,7 +19,7 @@
 - [ ] Plugin README covers all 10 standard sections
 - [ ] Marketplace manifest updated (if new plugin)
 
-## Quality gate
+## Self-test gate
 
 - [ ] skill-creator review passed
 - [ ] Smoke test run on real input — paste results below
@@ -28,10 +28,14 @@
 
 <!-- What input you ran it on, what output you got, whether it was good. -->
 
-## Tier
+## Target phase
 
-- [ ] `lightweight` (default for new work)
-- [ ] `validated` (separate promotion PR — include eval results)
+- [ ] Merge to `team-test/` (new plugin or update to a team-test plugin)
+- [ ] Promotion to `plugins/` (Team Test → Live — include teammate validation evidence below)
+
+### Teammate validation (promotion PRs only)
+
+<!-- Who used the plugin, on what real work, and whether the outcome was good. -->
 
 ## Reviewer
 

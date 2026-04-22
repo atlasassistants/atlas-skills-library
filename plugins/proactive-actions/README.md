@@ -1,7 +1,7 @@
 # proactive-actions
 
 > Scan action items from meeting debriefs, classify what can be handled autonomously, and execute without waiting to be asked.
-> v0.1.0 — `medium` tier.
+> v0.1.0
 
 ## What it does
 

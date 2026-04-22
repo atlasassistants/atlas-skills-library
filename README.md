@@ -4,7 +4,9 @@ A collection of Claude Code plugins and portable skills built and battle-tested 
 
 ## What's inside
 
-Plugins live under `plugins/`. Each one is independently installable via the Claude Code marketplace flow. See each plugin's own README for details.
+Public plugins live under `plugins/` and are listed in the marketplace manifest. Each one is independently installable via the Claude Code marketplace flow. See each plugin's own README for details.
+
+Plugins in team testing live under `team-test/` and are **not** listed in the marketplace — Atlas teammates install them directly for validation before they are promoted to `plugins/`. See [`docs/skill-lifecycle.md`](docs/skill-lifecycle.md) for the full lifecycle.
 
 **Plugins:**
 - [`meeting-ops`](plugins/meeting-ops/) — meeting prep (internal and external), calendar scanning, and structured debriefs
@@ -31,10 +33,6 @@ Atlas teammates (and friends) can propose new plugins and skills. Read [`docs/co
 
 Many of these plugins encode Atlas's opinionated way of doing things — it's a differentiator, not a bug. See [`docs/methodology-patterns.md`](docs/methodology-patterns.md) for how opinionated vs neutral skills are structured.
 
-## Quality tiers
+## Lifecycle
 
-Plugins and skills ship at one of two tiers:
-- **lightweight** — reviewed + smoke-tested
-- **validated** — also passed eval-based review
-
-See [`docs/validation-badge.md`](docs/validation-badge.md).
+Every plugin moves through a defined set of phases from idea to public release. Plugins appear in `plugins/` only after an Atlas teammate (not the author) has used them on real work. See [`docs/skill-lifecycle.md`](docs/skill-lifecycle.md) for phases, gates, and the team-test → live promotion ritual.

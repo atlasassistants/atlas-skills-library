@@ -49,7 +49,6 @@ Some plugins will legitimately need Claude-Code-specific features — a custom s
 {
   "name": "some-plugin",
   "version": "0.1.0",
-  "tier": "lightweight",
   "claude_code_only": true
 }
 ```

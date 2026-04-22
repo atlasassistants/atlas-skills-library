@@ -1,7 +1,7 @@
 # meeting-ops
 
 > Meeting prep, calendar scanning, and structured debriefs — Atlas-style.
-> v0.1.0 — `lightweight` tier.
+> v0.1.0
 
 ## What it does
 

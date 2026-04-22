@@ -1,7 +1,7 @@
 # travel-prep
 
 > Proactive travel preparation for executive travelers — onboarding, pre-trip briefings, and day-of support.
-> v0.1.0 — `medium` tier.
+> v0.1.0
 
 ## What it does
 

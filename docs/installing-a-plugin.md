@@ -66,13 +66,19 @@ Claude Code exposes a marketplace update flow to pull the latest version of a pl
 
 To remove a plugin you no longer want, use Claude Code's plugin uninstall flow (again, the exact command may vary by version — check `/plugin help`). Uninstalling a plugin removes it from the session's available skills but doesn't affect the marketplace registration.
 
-## 8. Using skills outside Claude Code
+## 8. Installing a team-test plugin (Atlas teammates only)
+
+Plugins in the Team Test phase live under `team-test/` in this repo and are **not** listed in the marketplace, so `/plugin install <name>@atlas` will not find them. Atlas teammates who want to try a team-test plugin install it directly — by local path or git subpath — rather than through the marketplace. The exact command depends on your Claude Code version; check `/plugin help` for the current direct-install syntax.
+
+Once a team-test plugin has been validated by a non-author teammate, the product team promotes it into `plugins/` and adds it to the marketplace; at that point, the normal marketplace install flow above is the right install path.
+
+## 9. Using skills outside Claude Code
 
 You don't need Claude Code to benefit from this library. Every skill in this repo is just a `SKILL.md` file with YAML frontmatter and markdown body — any agent runtime that can read markdown can load and use it. Clone the repo (or just the plugin folder you care about), point your agent at the `SKILL.md`, and wire up the capabilities listed in the plugin README to whatever tools your agent has available.
 
 Full details on the portability conventions, including how non-CC agents should consume `SKILL.md` and reference docs, are in [`using-outside-claude-code.md`](using-outside-claude-code.md).
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 A few concrete issues and fixes:
 
