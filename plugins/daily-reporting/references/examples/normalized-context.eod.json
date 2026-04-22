@@ -1,0 +1,74 @@
+{
+  "mode": "eod",
+  "report_date": "2026-04-20",
+  "timezone": "America/Edmonton",
+  "continuity_status": "available",
+  "participants": [
+    { "name": "Executive", "role": "Executive", "owner_type": "exec" },
+    { "name": "Operator", "role": "EA / Operator", "owner_type": "ea" },
+    { "name": "Assistant", "role": "Assistant / CoS", "owner_type": "assistant" }
+  ],
+  "source_family_results": {
+    "calendar": {
+      "calendar_summary": {
+        "key_events": ["Hiring review", "Client renewal prep", "Board prep block"],
+        "tomorrow_preview": ["Board prep meeting at 09:00"]
+      }
+    },
+    "email": {
+      "inbox_flags": {
+        "pending_decisions": ["Client renewal still waiting on finance response"],
+        "urgent_followups": ["Need board-prep confirmation before morning"],
+        "executive_risks": ["Tomorrow's prep may compress if KPI export stays late"]
+      }
+    },
+    "tasks": {
+      "priority_context": {
+        "current_priorities": ["Close renewal decision", "Prepare board update"],
+        "dependencies": ["Finance contact response", "Final KPI export"],
+        "carryover_candidates": ["Prepare board update draft", "Re-check renewal reply by midday tomorrow"],
+        "exec_relevant_support_work": ["Operator to front-load board prep before meetings"]
+      },
+      "task_snapshot": {
+        "completed_today": ["Operator training outline finalized", "Hiring review agenda locked"],
+        "stalled_items": ["Client renewal decision not yet final"]
+      }
+    },
+    "meetings": {
+      "meeting_note_summaries": {
+        "decisions": ["Hiring review structure locked for next week"],
+        "followups": ["Board prep depends on KPI export"],
+        "dependencies": ["Final KPI export"]
+      }
+    },
+    "prior_state": {
+      "prior_locked_state": {
+        "mode": "sod",
+        "report_date": "2026-04-20",
+        "priorities": ["Finalize operator training outline", "Protect board prep time"],
+        "carryovers": ["Renewal decision follow-up if still unresolved"],
+        "notes_for_next_cycle": ["Start the day with board prep before reactive work."]
+      }
+    },
+    "manual": {
+      "freeform_operator_notes": ["Tomorrow's first meeting needs a prep reminder in the draft."],
+      "confirmed_priorities": ["Carry forward the client renewal decision", "Prepare tomorrow's board update"]
+    }
+  },
+  "merged_context": {
+    "priorities": ["Carry forward the client renewal decision", "Prepare tomorrow's board update"],
+    "dependencies": ["Finance contact response", "Final KPI export"],
+    "carryovers": ["Prepare board update draft", "Re-check renewal reply by midday tomorrow"],
+    "completed_items": ["Operator training outline finalized", "Hiring review agenda locked"],
+    "unresolved_items": ["Client renewal decision is not yet final"],
+    "risks": ["Tomorrow's prep may compress if KPI export stays late"],
+    "schedule_signals": ["Board prep meeting at 09:00 tomorrow"],
+    "inbox_signals": ["Need board-prep confirmation before morning"],
+    "meeting_signals": ["Hiring review structure locked for next week"],
+    "support_work": ["Operator to front-load board prep before meetings"],
+    "planned_priorities": ["Finalize operator training outline", "Protect board prep time"],
+    "stalled_items": ["Client renewal decision not yet final"],
+    "next_cycle_focus": ["Carry forward the client renewal decision", "Prepare tomorrow's board update"],
+    "notes_for_next_cycle": ["Start the day with board prep before reactive work."]
+  }
+}

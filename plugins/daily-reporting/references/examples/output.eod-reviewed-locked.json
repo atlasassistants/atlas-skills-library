@@ -1,0 +1,59 @@
+{
+  "mode": "eod",
+  "report_date": "2026-04-20",
+  "timezone": "America/Edmonton",
+  "status": "final",
+  "report_stage": "locked",
+  "finalization_mode": "reviewed_locked",
+  "human_readable_report": "Daily End of Day - 2026-04-20\n\n**Day verdict**\n- Productive on training and hiring prep; renewal decision and board prep still carry into tomorrow.\n\n**What moved today**\n- Operator training outline finalized\n- Hiring review agenda locked\n\n**What did not move**\n- Client renewal decision not yet final\n\n**Key blockers and dependencies**\n- Finance contact response\n- Final KPI export\n\n**Decisions, commitments, and inbox signals**\n- Hiring review structure locked for next week\n- Need board-prep confirmation before morning\n\n**Carry forward into next cycle**\n- Prepare board update draft\n- Re-check renewal reply by midday tomorrow\n\n**Support work affecting executive execution**\n- Operator to front-load board prep before meetings\n\n**Risks and watchouts**\n- Tomorrow's prep may compress if KPI export stays late\n\n**Next cycle focus**\n- Carry forward the client renewal decision\n- Prepare tomorrow's board update\n\n**Notes for next cycle**\n- Start the day with board prep before reactive work.",
+  "structured_state": {
+    "mode": "eod",
+    "report_date": "2026-04-20",
+    "timezone": "America/Edmonton",
+    "status": "final",
+    "report_stage": "locked",
+    "finalization_mode": "reviewed_locked",
+    "confirmed_by": "Operator",
+    "confirmed_role": "ea",
+    "confirmed_at": "2026-04-20T17:42:00-06:00",
+    "locked_at": "2026-04-20T17:42:05-06:00",
+    "participants": [
+      { "name": "Executive", "role": "Executive", "owner_type": "exec" },
+      { "name": "Operator", "role": "EA / Operator", "owner_type": "ea" },
+      { "name": "Assistant", "role": "Assistant / CoS", "owner_type": "assistant" }
+    ],
+    "priorities": [
+      "Carry forward the client renewal decision",
+      "Prepare tomorrow's board update"
+    ],
+    "carryovers": [
+      "Prepare board update draft",
+      "Re-check renewal reply by midday tomorrow"
+    ],
+    "dependencies": [
+      "Finance contact response",
+      "Final KPI export"
+    ],
+    "risks": [
+      "Tomorrow's prep may compress if KPI export stays late"
+    ],
+    "unresolved_items": [
+      "Client renewal decision is not yet final"
+    ],
+    "completed_items": [
+      "Operator training outline finalized",
+      "Hiring review agenda locked"
+    ],
+    "notes_for_next_cycle": [
+      "Start the day with board prep before reactive work."
+    ]
+  },
+  "delivery_meta": {
+    "review_destination": "review-surface",
+    "final_destination": "final-destination"
+  },
+  "validation_meta": {
+    "schema_version": "1.0",
+    "warnings": []
+  }
+}
