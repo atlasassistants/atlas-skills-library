@@ -1,0 +1,6 @@
+# ideal-week-ops Composio implementation
+# All scripts use the Python standard library plus the Composio CLI (installed separately, not via pip).
+# Python 3.9+ required for the type hints used in the scripts.
+#
+# No third-party packages required. The Composio CLI is the integration boundary —
+# install it from https://docs.composio.dev/cli or the Install page of your Composio dashboard.
