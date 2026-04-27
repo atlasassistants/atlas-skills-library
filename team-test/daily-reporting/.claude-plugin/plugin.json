@@ -1,0 +1,9 @@
+{
+  "name": "daily-reporting",
+  "version": "0.1.0",
+  "description": "Executive daily reporting — start-of-day planning and end-of-day closeout with continuity handoff, review/locking, and connector-agnostic source handling. Encodes Atlas's SOD/EOD methodology.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["reporting", "executive", "daily", "productivity", "planning"]
+}
