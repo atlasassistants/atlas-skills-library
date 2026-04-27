@@ -1,0 +1,9 @@
+{
+  "name": "ideal-week-ops",
+  "version": "0.1.0",
+  "description": "Captures an executive's ideal week, documents enforceable scheduling rules, and scans the calendar on a schedule to flag conflicts and suggest fixes.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["calendar", "executive", "ideal-week", "scheduling", "deep-work", "preferences", "rules"]
+}
