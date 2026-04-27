@@ -86,7 +86,32 @@ Iterate on edits in conversation. Do not save until the user explicitly confirms
 
 Write the confirmed document to the configured `ideal_week_path`. Default location: `client-profile/ideal-week.md` in the user's workspace. Create parent directories if needed. Delete the `.extract-in-progress.json` marker.
 
-### 7. Offer to set up a recurring scan
+### 7. Configure notification channel and recipient
+
+The scan skill needs two settings to deliver its daily ping. Ask the user, in order:
+
+1. **Channel** — "Where should the daily scan notification be delivered? Options: `slack`, `imessage`, `gmail`, `outlook`, or `file` (writes to a local markdown file)."
+2. **Recipient (target)** — "Who should receive it? This is the Slack handle, email address, phone number, or file path the message will be sent to. Often the executive themselves, the EA, or a shared channel both are in — pick one primary recipient."
+
+**Before saving, surface the self-notification trap if it applies.** If the chosen channel is `slack` or `imessage`, tell the user explicitly:
+
+> "Heads up — if the recipient is your own account (your own Slack handle from your own connected workspace, or your own number on iMessage), you will NOT be notified. Slack does not push self-DMs and iMessage does not notify messages sent to your own Apple ID — the message lands silently. For self-pinging, switch to `gmail` or `outlook` (the email lands in your inbox AND in Sent, with normal notifications). For `slack` or `imessage`, set the recipient to a different person — typically the EA's handle, or a shared channel both of you are in. Want to change either setting before I save?"
+
+Let the user adjust. Do not write the config until they confirm.
+
+Then write `.claude/ideal-week-ops.local.md` in the user's workspace with at minimum these keys:
+
+```yaml
+---
+ideal_week_path: <path saved in step 6>
+notification_channel: <chosen channel>
+notification_target: <chosen recipient>
+---
+```
+
+If the file already exists, update only `notification_channel` and `notification_target` (and `ideal_week_path` if it changed) — do not overwrite other settings the user may have configured (`calendar_provider`, `scan_schedule`, `dry_run`, etc.). Create parent directories if needed.
+
+### 8. Offer to set up a recurring scan
 
 After save, ask:
 

@@ -96,8 +96,13 @@ The plugin reads `.claude/ideal-week-ops.local.md` from the user's workspace. Ex
 ---
 ideal_week_path: client-profile/ideal-week.md
 calendar_provider: googlecalendar
+# notification_channel: where to send — slack | imessage | gmail | outlook | file
+# notification_target:  who receives — Slack handle, email address, phone, or file path
+# IMPORTANT: Slack and iMessage do NOT notify when the target is your own connected account.
+# For self-pinging, use gmail or outlook (lands in your inbox + Sent with normal notifications).
+# For slack/imessage, set the target to a different recipient (EA handle, shared channel).
 notification_channel: slack
-notification_target: "@sam.reyes"     # Slack DM target, email address, etc.
+notification_target: "@sam.reyes"
 scan_window_days: 1
 scan_schedule:
   - "0 17 * * *"   # 5pm — flag tomorrow's calendar
@@ -129,5 +134,7 @@ The fetch script reads from all listed accounts and merges results.
 **MCP tools aren't visible to the agent.** You installed Composio for Claude Code but didn't restart. Restart your tool fully (close and reopen the terminal/window). Confirm by asking the agent "what Composio tools do you have?" — it should list `COMPOSIO_SEARCH_TOOLS`, `COMPOSIO_MULTI_EXECUTE_TOOL`, etc.
 
 **`scan-ideal-week` runs but no notification arrives.** Check `.claude/ideal-week-ops.local.md`'s `notification_channel` matches a Connected app, and `notification_target` is correct (Slack handle, email address). Run `python scripts/notify_send.py --dry-run` to print the formatted message and confirm it looks right before debugging the send.
+
+**The send returns success but the recipient never sees it.** Self-notification trap. If `notification_channel` is `slack` or `imessage` AND `notification_target` is the same account that's connected to Composio, the message is delivered silently — Slack does not push self-DMs, and iMessage does not notify messages sent to your own Apple ID. Either (a) change `notification_target` to a different recipient (EA handle, shared channel), or (b) switch `notification_channel` to `gmail` or `outlook`, which deliver to inbox + Sent normally even when the recipient and the connected account are the same.
 
 **Scheduled scan didn't run.** On Linux/macOS: `crontab -l` should show the entries `setup_schedule.py` registered. On Windows: open Task Scheduler and look for tasks named `ideal-week-scan-*`. If missing, re-run `setup_schedule.py`.

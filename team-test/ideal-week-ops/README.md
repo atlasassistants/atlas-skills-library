@@ -50,12 +50,17 @@ After installing, complete the first-run setup below — `extract-ideal-week` mu
 ## First-run setup
 
 1. **Wire calendar + notification capabilities.** If using Composio (recommended), follow [`implementations/composio/README.md`](implementations/composio/README.md) — covers Composio account setup, app installation for your runtime, and connecting Google Calendar plus a notification channel. If using direct MCPs, install Google Calendar MCP and one notification MCP yourself.
-2. **Decide where the ideal-week document will live.** Default: `client-profile/ideal-week.md` in the user's workspace. Override via `.claude/ideal-week-ops.local.md` (see customization notes).
-3. **Run `extract-ideal-week`.** The skill explains what an ideal week is, asks if the exec already has one documented, parses it if yes or runs the extraction interview if no, and writes the documented result to the configured path. Confirm before the file is finalized.
-4. **Pick how the scan gets triggered.** Two options, not mutually exclusive:
+2. **Decide who gets the daily ping, and on which channel.** Two settings to pick — both saved to `.claude/ideal-week-ops.local.md`:
+   - **`notification_channel`** — where to send: `slack`, `imessage`, `gmail`, `outlook`, or `file`.
+   - **`notification_target`** — who receives: a Slack handle, email address, phone number, or file path. Often the executive, the EA, or a shared channel both are in. Pick one primary recipient.
+
+   **Important — the self-notification trap.** If `notification_channel` is `slack` or `imessage` AND `notification_target` is the same account connected to Composio (e.g., your own Slack handle from your own connected workspace, or your own number on iMessage), the message is delivered **silently** — Slack does not push self-DMs, and iMessage does not notify messages sent to your own Apple ID. For **self-pinging**, use `gmail` or `outlook` instead — the email lands in your inbox AND in Sent, with normal mobile/desktop notifications. For `slack` or `imessage`, route to a different recipient (typically the EA's handle, or a shared channel both you and the EA are in).
+3. **Decide where the ideal-week document will live.** Default: `client-profile/ideal-week.md` in the user's workspace. Override via `.claude/ideal-week-ops.local.md` (see customization notes).
+4. **Run `extract-ideal-week`.** The skill explains what an ideal week is, asks if the exec already has one documented, parses it if yes or runs the extraction interview if no, asks for the channel + recipient choice from step 2 (and surfaces the self-notification warning), and writes both the ideal-week document and a starter `.claude/ideal-week-ops.local.md`. Confirm before the file is finalized.
+5. **Pick how the scan gets triggered.** Two options, not mutually exclusive:
    - **Manual** — invoke `scan-ideal-week` on demand at any time with phrases like "scan calendar", "what's wrong with tomorrow", or "is today's calendar clean". The skill works fully without scheduling.
    - **Recurring** *(recommended for foolproofness)* — register a recurring task in your runtime that invokes `scan-ideal-week`. Recommended cadence: weekdays 5pm (flags tomorrow) + weekdays 7am (flags today). Wire this via your runtime's native mechanism (see Suggested tool wiring above). The plugin is agnostic about which scheduler.
-5. **First scan.** Run `scan-ideal-week` once manually to confirm the wiring works end-to-end and the flag output looks reasonable before relying on the schedule.
+6. **First scan.** Run `scan-ideal-week` once manually to confirm the wiring works end-to-end and the flag output looks reasonable before relying on the schedule.
 
 ## Skills included
 
@@ -67,7 +72,7 @@ After installing, complete the first-run setup below — `extract-ideal-week` mu
 Common things clients change:
 
 - **Ideal-week document location.** Default is `client-profile/ideal-week.md`. Override by editing `.claude/ideal-week-ops.local.md` (`ideal_week_path: <your-path>`). Both skills read the same path.
-- **Notification channel.** Set via `.claude/ideal-week-ops.local.md` (`notification_channel: slack | imessage | gmail | outlook | file`). The Composio implementation auto-discovers which apps are connected and uses the configured one.
+- **Notification channel and recipient.** Both live in `.claude/ideal-week-ops.local.md` — `notification_channel: slack | imessage | gmail | outlook | file` (where to send) and `notification_target: <handle | email | phone | file path>` (who receives). The Composio implementation auto-discovers which apps are connected and uses the configured channel. **Heads up:** Slack and iMessage do not notify when the recipient is the same account that's connected to Composio — for self-pinging use `gmail` or `outlook`, or set `notification_target` to a different recipient (EA, shared channel). See first-run setup §6 step 2 for the full explanation.
 - **Scan window.** Default: end-of-day scan looks at tomorrow only; morning scan looks at today only. Override via `scan_window_days` in the local config.
 - **Rule severities.** Each of the seven rule categories (protected-block, NEVER, cap, PREFER, overlap, buffer, missing-prep) has a default severity (block / warning / nudge) — see [`skills/scan-ideal-week/references/atlas-calendar-enforcement-methodology.md`](skills/scan-ideal-week/references/atlas-calendar-enforcement-methodology.md) for the full taxonomy. Severities can be overridden per-rule in the ideal-week document.
 - **Schedule cadence.** Default twice daily (weekdays 5pm + 7am). Adjust in `.claude/ideal-week-ops.local.md` (`scan_schedule:`). Wire the actual recurrence in your runtime's scheduling mechanism — see Suggested tool wiring.
@@ -95,6 +100,8 @@ The full extraction framework lives at [`skills/extract-ideal-week/references/at
 **Calendar events aren't being detected.** If using Composio, run the verification step in [`implementations/composio/README.md`](implementations/composio/README.md) — `COMPOSIO_MANAGE_CONNECTIONS` should show Google Calendar (or Outlook) as Connected. If using direct MCP, confirm the MCP is authenticated and can list events for the target date range. Also check that the calendar account being read is the one the exec actually schedules into (work vs personal).
 
 **Notifications aren't arriving.** Confirm the notification channel in `.claude/ideal-week-ops.local.md` matches an app you've connected (in Composio or via direct MCP). Run `scan-ideal-week --dry-run` (or the equivalent flag in your wiring) to print the notification body to terminal — if that looks right, the issue is in the send step, not the scan logic.
+
+**The send returns success but the recipient never sees the notification.** This is the self-notification trap. If `notification_channel` is `slack` or `imessage` AND `notification_target` is the same account connected to Composio, the send succeeds silently — Slack does not push self-DMs, and iMessage does not notify messages sent to your own Apple ID. Two fixes: (a) change `notification_target` in `.claude/ideal-week-ops.local.md` to a different recipient (the EA's handle, a shared channel both you and the EA are in); or (b) switch `notification_channel` to `gmail` or `outlook` — both deliver to inbox + Sent with normal notifications even when the recipient and the connected account are the same.
 
 **Scheduled scan didn't run.** Check that the recurring trigger was actually registered in your runtime — Cowork's Scheduled tasks list, Claude Code's scheduled-agents list, `crontab -l`, or wherever applicable. Local OS cron only runs when the device is on; if scans are silently missing, switch to a server-side scheduler (Cowork, scheduled agents, GitHub Actions).
 
