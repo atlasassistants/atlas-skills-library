@@ -53,7 +53,7 @@ Before doing anything else, check state in this order:
 
 ### 2. Explain what an ideal week is
 
-Before asking any extraction questions, load and walk the user through `references/what-is-an-ideal-week.md` (the plugin-wide reference). This is non-negotiable — people interpret "ideal week" differently, and the skill's questions assume Atlas's specific definition (rhythms + protected blocks + rule buckets + zone of genius). Skip only if the user explicitly confirms they already know the framework.
+Before asking any extraction questions, load and walk the user through `../../references/what-is-an-ideal-week.md` (the plugin-wide reference). This is non-negotiable — people interpret "ideal week" differently, and the skill's questions assume Atlas's specific definition (rhythms + protected blocks + rule buckets + zone of genius). Skip only if the user explicitly confirms they already know the framework.
 
 ### 3. Check for existing documentation
 
