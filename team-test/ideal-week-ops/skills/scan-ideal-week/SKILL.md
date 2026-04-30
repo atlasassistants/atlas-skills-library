@@ -28,18 +28,81 @@ The exec's ideal week is enforceable only if something is checking the calendar 
 
 ## Steps
 
-### 0. Pre-flight
+### 0. Precondition check — config required
 
-1. Read `.claude/ideal-week-ops.local.md`. If it doesn't exist, fail loudly: "no config — run `extract-ideal-week` first." Do not invent defaults silently.
-2. Read the ideal-week document at the configured path. If absent or unparseable per `../../references/ideal-week-format.md`, fail with the same instruction.
-3. Resolve target window from inputs or invocation time (rule above).
-4. Detect dry-run mode (config flag `dry_run: true` or skill argument). In dry-run, skip the notification send and print the output to terminal instead.
+Before any other logic, check `.claude/ideal-week-ops.local.md` exists in the workspace AND contains the required fields.
 
-### 1. Load events
+**Required fields:**
+- `calendar_accounts` (non-empty list)
+- `notification_channel` (one of `slack`, `gmail`, `outlook`, `file`)
+- `notification_target` (non-empty string)
+- `ideal_week_path` (non-empty string)
 
-List calendar events for every date in the target window, across every calendar account configured. For each event, capture: title, start, end, attendees (count and identifiers), is_recurring, organizer, account it came from.
+**If config is missing or any required field is missing/empty**: HARD FAIL. Tell the user:
 
-Sort events by start time per day.
+> "Cannot scan — `.claude/ideal-week-ops.local.md` is [missing | missing required field <name>]. Run `setup` first to wire calendar + notification, then re-run scan."
+
+Do NOT attempt to use defaults or fall back. The user needs to know setup is the precondition; silent fallback masks the real issue.
+
+**If `notification_channel` is set to a value that has no corresponding wired tool** (e.g., `slack` with no Slack tool loaded): also hard-fail with a clear message pointing at re-running `setup`.
+
+After the precondition check passes:
+1. Read the ideal-week document at the configured `ideal_week_path`. If absent or unparseable per `../../references/ideal-week-format.md`, hard-fail with: "Cannot scan — ideal-week document at <ideal_week_path> [is missing | could not be parsed]. Run `extract-ideal-week` first."
+2. Resolve the target window from inputs or invocation time (per "Pull calendar events" Step 1's window rule).
+3. Detect dry-run mode (config flag `dry_run: true` or skill argument). In dry-run, the notification is rendered and printed to terminal but not actually sent.
+
+### 1. Pull calendar events
+
+Use the available calendar tool to list events for the scan window.
+
+**Calendar accounts come from `.claude/ideal-week-ops.local.md`** (`calendar_accounts:` list). The format is `<provider>:<account-identifier>` — e.g., `googlecalendar:sam@atlas.co`.
+
+**Window**:
+- If invocation time is at or after 4pm local: `scan_window_start = tomorrow 00:00`, `scan_window_end = tomorrow 23:59`
+- Otherwise: `scan_window_start = today 00:00`, `scan_window_end = today 23:59`
+- If `scan_window_days > 1` in config, extend `scan_window_end` accordingly.
+
+**For each account in `calendar_accounts`**, call the available calendar tool's "list events" function with:
+- The account identifier as the connected-account / target-account parameter (Composio: `connected_account_id` or matching toolkit + email; direct MCP: whatever its account-selection convention is)
+- `start = scan_window_start`, `end = scan_window_end`
+
+Collect all events into a single list, **tagging each event with which account it came from** (used in the grouped output later: `event.source_calendar = "googlecalendar:sam@atlas.co"`).
+
+**De-duplicate** events that appear on multiple accounts:
+- Primary key: `iCalUID` if present
+- Fallback: `(start, end, title)` tuple match
+
+The merged, de-duplicated list is what gets passed to the rule check.
+
+### Multi-calendar contract
+
+If `calendar_accounts` has length > 1, the skill MUST query each entry separately and merge results. Single-calendar is a special case of the loop, not a different code path.
+
+The fetch + dedupe logic in "Pull calendar events" already handles this (loop over the list, tag each event, dedupe by iCalUID). This section is a **contract** to prevent silent regressions — any future edit that introduces a "use the first calendar account" shortcut breaks the multi-calendar feature.
+
+**All events count equally regardless of source calendar.** No per-calendar rule scoping. If a rule is "no meetings before 9am" and there's an 8am personal-calendar event, it gets flagged. The user picked to merge — they own that.
+
+### Multi-calendar grouped output
+
+When rendering the notification, the format depends on the number of calendar accounts in config:
+
+**1 entry in `calendar_accounts`** → single flag list, no calendar labels:
+
+> *Tomorrow's calendar:*
+> - Tuesday 8am dentist violates no-meetings-before-9am. Suggest: move to Friday morning.
+> - Tuesday 2pm board prep overlaps deep-work block. Suggest: move to Wednesday afternoon.
+
+**2+ entries in `calendar_accounts`** → flags grouped per source calendar:
+
+> *Tomorrow's calendar:*
+>
+> **Work calendar (`sam@atlas.co`):**
+> - Tuesday 2pm board prep overlaps deep-work block. Suggest: move to Wednesday afternoon.
+>
+> **Personal calendar (`sam@personal.com`):**
+> - Tuesday 8am dentist violates no-meetings-before-9am. Suggest: reschedule for after 9.
+
+Cross-calendar conflicts (e.g., 8am dentist on personal AND 8am internal standup on work) are caught by the rule check (both events go through the same merged list). The flag appears under whichever calendar holds the violating event — typically both, with one flag in each calendar's section.
 
 ### 2. Run the rule engine
 
@@ -71,11 +134,54 @@ Format per `../../references/scan-output-format.md`. Required structure:
 
 If the entire window is clean, the summary is a single line: "Calendar clean for <window>. No flags."
 
-### 5. Send notification
+### 5. Send the notification
 
-Deliver the summary to the channel configured in `.claude/ideal-week-ops.local.md`. Channels supported via the implementation layer: Slack DM, iMessage, Gmail, Outlook, file write. The skill body itself does not know the channel mechanics — it calls into the configured implementation (e.g., `../../implementations/composio/scripts/notify_send.py`).
+Use the available notification tool. **Channel and recipient come from `.claude/ideal-week-ops.local.md`** (`notification_channel`, `notification_target`).
 
-In dry-run mode: print the summary to terminal and skip the send.
+**Render format per channel:**
+
+- **`slack`** — markdown blocks. Group flags by source calendar if `calendar_accounts` has 2+ entries (see "Multi-calendar grouped output" below). Use Slack mrkdwn (`*bold*`, `_italic_`, ``code``). Send via the available Slack tool's "send message" function with `target = notification_target`.
+- **`gmail`** — HTML email. Subject: `Ideal-week scan — <date> — <N> flag(s)`. Body: HTML rendering of the flags grouped by source calendar (if multi-calendar). Send via the available Gmail tool's "send message" function with `to = notification_target`.
+- **`outlook`** — HTML email, same shape as Gmail. Send via the available Outlook tool's "send message" function with `to = notification_target`.
+- **`file`** — see "File-channel read-then-append safety" section below.
+
+If `dry_run: true` in config: render the notification body but DON'T call the send tool. Print the body to terminal so the user can verify wiring.
+
+**Channel mismatch handling:** If the configured `notification_channel` doesn't match any wired tool (e.g., config says `slack` but no Slack tool is loaded), abort with a clear message: "Config says channel=slack but no Slack tool is wired. Re-run `setup` to fix."
+
+### File-channel read-then-append safety
+
+When `notification_channel: file`, the scan writes to a per-day markdown file inside the configured folder. **NEVER overwrite — always read-then-append.**
+
+Logic:
+
+1. Compute file path: `<notification_target>/<YYYY-MM-DD>.md` where `notification_target` is the folder. Use the local date the scan was invoked. Example: `client-profile/ideal-week-scans/2026-04-30.md`.
+
+2. **If the file does not exist**: create it with a top-level header (`# Ideal-week scans — 2026-04-30`) and write the new section below.
+
+3. **If the file already exists**: READ its full contents first. Then write back the existing contents PLUS a new appended section. This is the critical safety contract — overwriting would clobber the morning scan when the evening scan runs (or vice versa).
+
+Each section is timestamped with HH:MM so morning + evening scans are distinguishable:
+
+````markdown
+## Evening scan — 2026-04-30 17:00 (looking at tomorrow)
+
+[flags rendered here]
+
+---
+
+## Morning scan — 2026-04-30 07:02 (looking at today)
+
+[flags rendered here]
+
+---
+````
+
+The order of sections in the file follows write order — the file accumulates over the day.
+
+**If the configured folder doesn't exist**: create it (recursively) before the first write.
+
+**If `dry_run: true`**: don't write to disk; print the rendered section to terminal so the user can preview.
 
 ### 6. Persist scan log
 
@@ -89,7 +195,7 @@ The notification body itself (the summary built in step 4). In dry-run mode, als
 
 - **Severity mapping.** Per-rule severities live in the ideal-week document. The scan skill reads them — it does not embed defaults. To change the meaning of "block" vs "warning" globally, edit `references/atlas-calendar-enforcement-methodology.md`.
 - **Suggestion engine.** The "where to move it" suggestion logic is per the methodology reference. The default looks for the next-available slot inside the same day's allowed blocks. Override per-rule in the ideal-week document if a specific rule needs a different suggestion strategy (e.g., "always suggest declining, never moving").
-- **Notification format.** The channel-specific renderer (Slack vs file vs email) lives in the implementation, not the skill. Edit `../../implementations/composio/scripts/notify_send.py` to change formatting per channel.
+- **Notification format.** The channel-specific renderer (Slack vs file vs email vs gmail vs outlook) is part of the skill body itself — see Step 5 below. Edit the format strings in Step 5 (or this skill's body more broadly) to change how notifications render per channel.
 - **Window detection.** The "tomorrow if afternoon, today if morning" rule can be overridden by passing an explicit window argument when invoking the skill, or by setting `default_window:` in the local config.
 
 ## Why opinionated
