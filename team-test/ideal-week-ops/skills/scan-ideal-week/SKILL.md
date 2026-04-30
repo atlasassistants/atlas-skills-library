@@ -125,7 +125,7 @@ For every flag, check the event's organizer/attendees against the VIP override l
 
 ### 4. Build the summary
 
-Format per `../../references/scan-output-format.md`. Required structure:
+**READ `../../references/scan-output-format.md` before composing the summary.** That reference file is the source of truth for the output template — header line shape, severity emoji (🚫 / ⚠️ / 💡), two-line flag entry format (identifier line + `→` indented suggestion line), `## Day` headers, footer format. Do NOT improvise the format from this skill body alone. The structure summary below is a quick orientation, not a substitute for reading the reference:
 
 - Header: target window + scan timestamp + total flag count by severity
 - One section per day, ordered chronologically

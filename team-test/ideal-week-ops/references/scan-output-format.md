@@ -1,6 +1,6 @@
 # Scan Output Format
 
-The shape of the summary the `scan-ideal-week` skill produces. The same structure renders in every channel — Slack, iMessage, email, file. The implementation layer adapts spacing and emphasis per channel; the content shape is fixed.
+The shape of the summary the `scan-ideal-week` skill produces. The same structure renders in every channel — Slack, email, file. The implementation layer adapts spacing and emphasis per channel; the content shape is fixed.
 
 ## Top-level structure
 
@@ -106,10 +106,9 @@ Ideal-week scan — tomorrow (Mon Apr 27) — all clean ✅ — scanned 2026-04-
 
 The MCP notification tool adapts the above for each channel:
 
-- **Slack** — emoji severity markers render natively; use Slack mrkdwn for bold; collapse very long flag lists into a thread reply with header in the main message
-- **iMessage** — strip markdown formatting; preserve emoji; preserve line breaks
-- **Email** — convert markdown to HTML; severity buckets become `<h3>` blocks; flag entries become `<li>`; suggestions render in italics
-- **File** — write the markdown as-is, append to existing file or write fresh per scan (configurable)
+- **Slack** — emoji severity markers render natively; use Slack mrkdwn for `*bold*` only if you want emphasis; the canonical content shape (emoji headers, `## Day`, two-line flag entries) already works in plain text. Collapse very long flag lists into a thread reply with header in the main message.
+- **Email (Gmail / Outlook)** — send as **plain text**. The canonical format above already has visual structure (emoji severity headers, `## ` day headers, `· ` separators, `→` indented suggestions, blank lines between sections) that renders identically in every email client. Do NOT convert to HTML — most send-mail tools (e.g., `GMAIL_SEND_EMAIL` via Composio) default to plain text, and HTML tags would render as literal text in the recipient's inbox.
+- **File** — write the markdown-style canonical format as-is. Read-then-append safety per `scan-ideal-week`'s "Log file safety" section.
 
 The content (headers, severity ordering, suggestion line, VIP annotation) is identical across channels. Only the rendering changes.
 

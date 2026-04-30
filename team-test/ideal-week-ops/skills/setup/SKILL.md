@@ -35,11 +35,19 @@ The work skills (`extract-ideal-week` and `scan-ideal-week`) need two capabiliti
 >
 > **Pattern A — Aggregator MCPs (Composio, Zapier MCP, etc.).** These expose generic *meta-tools* rather than one tool per app. Connected apps live inside the meta-tool parameters, not in tool names.
 >
-> Two-stage detection:
+> Three-stage detection:
 >
 > 1. **Presence check** — does the host have a meta-tool prefix loaded? Look for `mcp__composio__*` (Composio) or equivalents. If yes, the aggregator MCP itself is wired.
 >
+> 1.5. **Auth-bootstrap check.** If Stage 1 found the meta-tool prefix BUT the actual meta-tools (e.g., `COMPOSIO_SEARCH_TOOLS`) are NOT in the loaded tool list — only the auth-bootstrap variants (`mcp__composio__authenticate`, `mcp__composio__complete_authentication`) are present — the MCP server is installed but unauthenticated. In this case, DO NOT walk the user through the full Composio install at Step 2a. Instead, drive the auth flow directly: call the authenticate tool, deliver the OAuth URL to the user, wait for them to authorize, then re-run detection from Stage 1. The Composio install steps (sign up, connect apps, install for AI client) are unnecessary — the user has already done them; auth just needs to be re-completed in this session.
+>
+>    **For other aggregator MCPs**: if the same pattern applies (auth-bootstrap tools present, real meta-tools absent), use the equivalent auth-bootstrap call for that aggregator.
+>
+>    Only if the meta-tool prefix is entirely absent (Stage 1 itself failed) → walk the full Composio install (Step 2a).
+>
 > 2. **Connection query (authoritative).** For Composio, call `COMPOSIO_SEARCH_TOOLS` with one query per capability (`"list calendar events"`, `"send a slack message"`, `"send an email"`) and parse `toolkit_connection_statuses` — each entry has `{toolkit: <slug>, has_active_connection: <bool>, accounts: [...]}`. A capability is wired iff at least one matched toolkit has `has_active_connection: true`.
+>
+>    **Important — response handling.** `COMPOSIO_SEARCH_TOOLS` returns a large response (~50KB) including `recommended_plan_steps`, `tool_schemas`, `known_pitfalls`, etc. — IGNORE all of those. Only read `data.toolkit_connection_statuses`. Tool discovery output is not needed at detection time and pollutes context. (Future investigation: `COMPOSIO_MANAGE_CONNECTIONS` may be a cleaner alternative — a more focused meta-tool that returns connection state without tool discovery output. Worth evaluating in a future revision.)
 >
 >    Slug map for this plugin:
 >    - `googlecalendar`, `outlook` → calendar
@@ -196,17 +204,20 @@ Two questions: where the log file lives (always-on output), and (optionally) whi
 
 Capture answer to running state under `log_folder`. Accept the default if the user says "default" / "yes" / silence.
 
-**4b. Pick the notification channel (optional).** Ask:
+**4b. Pick the notification channel (optional).** Before asking, **filter** the channel list to only those with a wired notification tool per Step 0 detection. Always include "no ping" regardless. Then ask the user, presenting only the filtered options:
 
 > "Want a ping when the scan finds calendar conflicts? Or just check the log file when you want?
+> [Present only the wired notification options here, plus 'no ping']
+>
+> Examples (illustrative — show only what's actually wired):
 > - **gmail** — email to a Gmail address
 > - **slack** — Slack DM or channel
 > - **outlook** — email to an Outlook address
 > - **no ping** — skip; the log file is the only output"
 
-Filter the choices: only show channels for which a notification tool is wired (per Step 0 detection). Always show "no ping" as an option.
-
 Capture answer to running state under `notification_channel`. If user picks "no ping" → set `notification_channel: none`, skip 4c and 4d entirely.
+
+**Don't list channels the user can't actually use.** If only gmail is wired, the question becomes: *"Want a gmail ping when scans find conflicts, or just the log file?"* Don't surface slack as an option just because the SKILL.md mentions it — the user has to wire it first.
 
 **4c. Pick the recipient (only if channel ≠ none).** Ask based on channel:
 
