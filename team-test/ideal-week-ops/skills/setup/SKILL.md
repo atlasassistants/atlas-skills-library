@@ -185,32 +185,40 @@ Save running state to `.ideal-week-onboarding-in-progress.json`.
 
 ---
 
-### 4. Notification channel + recipient
+### 4. Output destination + (optional) notification ping
 
-This is the ideal-week-specific step. Two questions, then a self-trap check.
+Two questions: where the log file lives (always-on output), and (optionally) which channel to ping for live notifications.
 
-**4a. Pick the channel.** Ask:
+**4a. Pick the log folder.** Ask:
 
-> "Where should the daily ping go?
-> - **slack** — Slack DM or channel
+> "Every scan writes a per-day log file so you have a history of what was flagged. Where should those go?
+> Default: `client-profile/ideal-week-scans/` (relative to the workspace)."
+
+Capture answer to running state under `log_folder`. Accept the default if the user says "default" / "yes" / silence.
+
+**4b. Pick the notification channel (optional).** Ask:
+
+> "Want a ping when the scan finds calendar conflicts? Or just check the log file when you want?
 > - **gmail** — email to a Gmail address
+> - **slack** — Slack DM or channel
 > - **outlook** — email to an Outlook address
-> - **file** — write to a per-day markdown file (no MCP send needed; useful when you want history without a notification)"
+> - **no ping** — skip; the log file is the only output"
 
-Capture answer to running state under `notification_channel`.
+Filter the choices: only show channels for which a notification tool is wired (per Step 0 detection). Always show "no ping" as an option.
 
-**4b. Pick the recipient.** Ask based on channel:
+Capture answer to running state under `notification_channel`. If user picks "no ping" → set `notification_channel: none`, skip 4c and 4d entirely.
 
-- `slack` → "What's the recipient? Slack handle (`@user`) or channel (`#chan`)."
+**4c. Pick the recipient (only if channel ≠ none).** Ask based on channel:
+
 - `gmail` → "What's the recipient email address?"
+- `slack` → "What's the recipient? Slack handle (`@user`) or channel (`#chan`)."
 - `outlook` → "What's the recipient email address?"
-- `file` → "What folder should the daily scan files go in? Default: `client-profile/ideal-week-scans/`."
 
 Capture answer to running state under `notification_target`.
 
-**4c. Self-trap check (warning only, not blocker).**
+**4d. Slack self-trap check (only if `notification_channel` is `slack`).**
 
-If `notification_channel` is `slack` AND `notification_target` resolves to the same Slack account that's connected to the chosen Slack workspace in Composio (or in the user's direct Slack MCP), deliver this warning:
+If `notification_target` resolves to the same Slack account that's connected to the chosen Slack workspace in Composio (or in the user's direct Slack MCP), deliver this warning:
 
 > "Heads up — Slack does not push self-DMs, so this notification will deliver silently. Some options:
 >
@@ -220,9 +228,9 @@ If `notification_channel` is `slack` AND `notification_target` resolves to the s
 >
 > What would you like to do?"
 
-If user picks "use this anyway" → proceed with current values. If they switch → re-ask the relevant sub-question (4a or 4b), update running state.
+If user picks "use this anyway" → proceed with current values. If they switch → re-ask 4b (channel) or 4c (recipient), update running state.
 
-**Gmail and Outlook to self always work** — no warning fires for those channels. **File channel** has no self-trap (it's just a file write).
+**Gmail and Outlook to self always work** — no warning fires for those channels.
 
 How to detect "same Slack account":
 - Compare `notification_target` (handle or channel) against the user_info / account metadata on the connected Slack toolkit
@@ -250,21 +258,24 @@ ideal_week_path: client-profile/ideal-week.md
 calendar_accounts:
   - googlecalendar:sam@atlas.co
 
-# Notification channel — slack | gmail | outlook | file
-notification_channel: slack
+# Log file folder — every scan writes a per-day log here (always-on output, not optional)
+log_folder: client-profile/ideal-week-scans/
 
-# Recipient — depends on channel:
-#   slack   → @handle or #channel
+# Notification channel — optional live ping when scans find conflicts
+# Values: gmail | slack | outlook | none
+notification_channel: none
+
+# Recipient — required only when notification_channel is not "none"
 #   gmail   → email address
+#   slack   → @handle or #channel
 #   outlook → email address
-#   file    → folder path
-notification_target: "@sam.reyes"
+notification_target: ""
 
 # Scan window in days from invocation date.
 # Default 1 = look at one day. Evening scan looks at tomorrow; morning scan looks at today.
 scan_window_days: 1
 
-# Dry-run mode — when true, scan prints the notification body to terminal but doesn't send.
+# Dry-run mode — when true, scan prints log content + notification body to terminal but doesn't write or send.
 dry_run: false
 ---
 ````

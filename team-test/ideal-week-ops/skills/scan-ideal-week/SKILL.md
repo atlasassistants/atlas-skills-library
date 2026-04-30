@@ -34,8 +34,9 @@ Before any other logic, check `.claude/ideal-week-ops.local.md` exists in the wo
 
 **Required fields:**
 - `calendar_accounts` (non-empty list)
-- `notification_channel` (one of `slack`, `gmail`, `outlook`, `file`)
-- `notification_target` (non-empty string)
+- `log_folder` (non-empty string)
+- `notification_channel` (one of `gmail`, `slack`, `outlook`, `none`)
+- `notification_target` (required only if `notification_channel` is not `none`; can be empty/absent otherwise)
 - `ideal_week_path` (non-empty string)
 
 **If config is missing or any required field is missing/empty**: HARD FAIL. Tell the user:
@@ -44,7 +45,7 @@ Before any other logic, check `.claude/ideal-week-ops.local.md` exists in the wo
 
 Do NOT attempt to use defaults or fall back. The user needs to know setup is the precondition; silent fallback masks the real issue.
 
-**If `notification_channel` is set to a value that has no corresponding wired tool** (e.g., `slack` with no Slack tool loaded): also hard-fail with a clear message pointing at re-running `setup`.
+**If `notification_channel` is set to a value other than `none` AND that channel has no corresponding wired tool** (e.g., `slack` with no Slack tool loaded): hard-fail with a clear message pointing at re-running `setup`. (If `notification_channel` is `none`, no ping is needed and this check is skipped — the log file is still always written.)
 
 After the precondition check passes:
 1. Read the ideal-week document at the configured `ideal_week_path`. If absent or unparseable per `../../references/ideal-week-format.md`, hard-fail with: "Cannot scan — ideal-week document at <ideal_week_path> [is missing | could not be parsed]. Run `extract-ideal-week` first."
@@ -84,7 +85,7 @@ The fetch + dedupe logic in "Pull calendar events" already handles this (loop ov
 
 ### Multi-calendar grouped output
 
-When rendering the notification, the format depends on the number of calendar accounts in config:
+When rendering the output (both the log file and any notification ping), the format depends on the number of calendar accounts in config:
 
 **1 entry in `calendar_accounts`** → single flag list, no calendar labels:
 
@@ -134,28 +135,35 @@ Format per `../../references/scan-output-format.md`. Required structure:
 
 If the entire window is clean, the summary is a single line: "Calendar clean for <window>. No flags."
 
-### 5. Send the notification
+### 5. Output
+
+The scan has two outputs: an always-on log file, and an optional notification ping.
+
+**5a. Write the log file (always).**
+
+Write a per-day log file to `log_folder` from config. Use read-then-append safety — see "Log file safety" section below. This is the canonical output: the user has history of every scan even if they never receive or look at notifications.
+
+**5b. Send the notification ping (only if `notification_channel` is not `none`).**
 
 Use the available notification tool. **Channel and recipient come from `.claude/ideal-week-ops.local.md`** (`notification_channel`, `notification_target`).
 
 **Render format per channel:**
 
-- **`slack`** — markdown blocks. Group flags by source calendar if `calendar_accounts` has 2+ entries (see "Multi-calendar grouped output" below). Use Slack mrkdwn (`*bold*`, `_italic_`, ``code``). Send via the available Slack tool's "send message" function with `target = notification_target`.
 - **`gmail`** — HTML email. Subject: `Ideal-week scan — <date> — <N> flag(s)`. Body: HTML rendering of the flags grouped by source calendar (if multi-calendar). Send via the available Gmail tool's "send message" function with `to = notification_target`.
+- **`slack`** — markdown blocks. Group flags by source calendar if `calendar_accounts` has 2+ entries (see "Multi-calendar grouped output" above). Use Slack mrkdwn (`*bold*`, `_italic_`, ``code``). Send via the available Slack tool's "send message" function with `target = notification_target`.
 - **`outlook`** — HTML email, same shape as Gmail. Send via the available Outlook tool's "send message" function with `to = notification_target`.
-- **`file`** — see "File-channel read-then-append safety" section below.
 
-If `dry_run: true` in config: render the notification body but DON'T call the send tool. Print the body to terminal so the user can verify wiring.
+If `dry_run: true` in config: render the notification body but DON'T call the send tool. Print the body to terminal so the user can verify wiring. (The log file is also skipped in dry-run; see "Log file safety" below.)
 
-**Channel mismatch handling:** If the configured `notification_channel` doesn't match any wired tool (e.g., config says `slack` but no Slack tool is loaded), abort with a clear message: "Config says channel=slack but no Slack tool is wired. Re-run `setup` to fix."
+**Channel mismatch handling:** If `notification_channel` (other than `none`) doesn't match any wired tool (e.g., config says `slack` but no Slack tool is loaded), abort the ping with a clear message: "Config says channel=slack but no Slack tool is wired. The log file was still written to <log_folder>. Re-run `setup` to fix the ping."
 
-### File-channel read-then-append safety
+### Log file safety
 
-When `notification_channel: file`, the scan writes to a per-day markdown file inside the configured folder. **NEVER overwrite — always read-then-append.**
+The scan ALWAYS writes a per-day markdown log file to `log_folder` from config — regardless of whether `notification_channel` is set. **NEVER overwrite — always read-then-append.**
 
 Logic:
 
-1. Compute file path: `<notification_target>/<YYYY-MM-DD>.md` where `notification_target` is the folder. Use the local date the scan was invoked. Example: `client-profile/ideal-week-scans/2026-04-30.md`.
+1. Compute file path: `<log_folder>/<YYYY-MM-DD>.md`. Use the local date the scan was invoked. Example: `client-profile/ideal-week-scans/2026-04-30.md`.
 
 2. **If the file does not exist**: create it with a top-level header (`# Ideal-week scans — 2026-04-30`) and write the new section below.
 
@@ -177,9 +185,9 @@ Each section is timestamped with HH:MM so morning + evening scans are distinguis
 ---
 ````
 
-The order of sections in the file follows write order — the file accumulates over the day.
+The order of sections in the file follows write order — the log file accumulates over the day.
 
-**If the configured folder doesn't exist**: create it (recursively) before the first write.
+**If the configured `log_folder` doesn't exist**: create it (recursively) before the first write.
 
 **If `dry_run: true`**: don't write to disk; print the rendered section to terminal so the user can preview.
 
@@ -195,7 +203,7 @@ The notification body itself (the summary built in step 4). In dry-run mode, als
 
 - **Severity mapping.** Per-rule severities live in the ideal-week document. The scan skill reads them — it does not embed defaults. To change the meaning of "block" vs "warning" globally, edit `references/atlas-calendar-enforcement-methodology.md`.
 - **Suggestion engine.** The "where to move it" suggestion logic is per the methodology reference. The default looks for the next-available slot inside the same day's allowed blocks. Override per-rule in the ideal-week document if a specific rule needs a different suggestion strategy (e.g., "always suggest declining, never moving").
-- **Notification format.** The channel-specific renderer (Slack vs file vs email vs gmail vs outlook) is part of the skill body itself — see Step 5 below. Edit the format strings in Step 5 (or this skill's body more broadly) to change how notifications render per channel.
+- **Notification format.** The channel-specific renderer (Slack vs Gmail vs Outlook) is part of the skill body itself — see Step 5 below. Edit the format strings in Step 5 (or this skill's body more broadly) to change how notifications render per channel.
 - **Window detection.** The "tomorrow if afternoon, today if morning" rule can be overridden by passing an explicit window argument when invoking the skill, or by setting `default_window:` in the local config.
 
 ## Why opinionated
