@@ -23,21 +23,22 @@ If the exec doesn't yet have an ideal week, the extraction skill creates one fro
 
 The plugin's skills depend on these capabilities. Each is named abstractly — wire it up to whatever tools the host agent has access to.
 
-- **Calendar read** — list events for a given date or date range across all relevant calendar accounts (work + personal if both are scheduled into)
+- **Calendar read** — list events for a given date or date range across all relevant calendar accounts (work + personal if both are scheduled into; the plugin supports merging multiple accounts)
 - **File read + write** — read and write the ideal-week document and the plugin's local config file
-- **Notification send** — send a single message to a chosen channel (Slack DM, iMessage, email, or write to a file the user checks)
-- **Recurring trigger** *(optional but strongly recommended)* — the ability for the runtime to invoke `scan-ideal-week` on a recurring schedule. Recommended cadence: weekdays 5pm (flags tomorrow), weekdays 7am (flags today). Without this, the user must invoke the scan manually each cycle. The plugin does not depend on a specific scheduling implementation — wire it through whatever recurring-task mechanism your runtime provides.
+- **Notification send** — send a single message to a chosen channel (Slack DM/channel, Gmail, Outlook, or write to a per-day file the user checks)
 
 ## Suggested tool wiring
 
-| Capability | Common options |
-|---|---|
-| Calendar read | Composio (Google Calendar / Outlook routing — recommended), Google Calendar MCP direct, Outlook MCP direct |
-| File read + write | Filesystem MCP, native file tools |
-| Notification send | Composio (Slack / Gmail / Outlook routing — recommended), Slack MCP direct, iMessage MCP, plain file output |
-| Recurring trigger | Whatever recurring-task feature your runtime provides — Claude Cowork "Scheduled tasks" with frequency Weekdays, Claude Code `/schedule`, an SDK-driven scheduled agent, GitHub Actions cron, OS cron, anything else. The plugin is agnostic about which one. |
+| Capability | Validated default | Alternatives |
+|---|---|---|
+| Calendar read | **Composio MCP** → Google Calendar or Outlook Calendar (OAuth, no API keys) | Anthropic's Google Calendar MCP, Outlook MCP, or any other MCP that exposes a "list events" tool |
+| Notification send | **Composio MCP** → Slack / Gmail / Outlook (OAuth, no API keys) | Slack MCP, Gmail MCP, Outlook MCP, or write to a file (no MCP needed) |
+| File read + write | Native filesystem tools | (no alternative needed) |
+| Recurring trigger (optional) | Whatever your runtime provides — Cowork Scheduled tasks, Claude Code `/schedule`, GitHub Actions cron, OS cron | The plugin is agnostic. Without a recurring trigger, the user invokes `scan-ideal-week` manually. |
 
-The recommended wiring for calendar and notification is **Composio** (via MCP) because it routes both through one connection layer the user configures once at https://app.composio.dev. Direct MCP wiring also works — see customization notes.
+**Composio MCP is the recommended wiring for both calendar and notification** because it routes through one connection layer the user configures once at https://app.composio.dev. The `setup` skill walks the user through Composio install + tool selection. If you'd rather wire your own MCPs, the `setup` skill detects them and offers to fill any gaps with Composio.
+
+**Recurring trigger is NOT shipped with this plugin.** Wire it through whatever recurring-task feature your runtime provides — see the `setup` skill's hand-off message for runtime-specific suggestions.
 
 ## Installation
 
@@ -45,27 +46,20 @@ The recommended wiring for calendar and notification is **Composio** (via MCP) b
 /plugin install ideal-week-ops@atlas
 ```
 
-After installing, complete the first-run setup below — `extract-ideal-week` must run before `scan-ideal-week` will produce useful output.
+**After installing, run `setup` first.** The `setup` skill detects what's already wired in your AI host, walks you through Composio install if needed, captures your notification channel + recipient, and writes a local config file. Then `extract-ideal-week` and `scan-ideal-week` are ready to use.
 
 ## First-run setup
 
-1. **Wire calendar + notification capabilities.** If using Composio (recommended), install the Composio MCP via your runtime, then connect Google Calendar and a notification channel at https://app.composio.dev. If using direct MCPs, install Google Calendar MCP and one notification MCP yourself.
-2. **Decide who gets the daily ping, and on which channel.** Two settings to pick — both saved to `.claude/ideal-week-ops.local.md`:
-   - **`notification_channel`** — where to send: `slack`, `imessage`, `gmail`, `outlook`, or `file`.
-   - **`notification_target`** — who receives: a Slack handle, email address, phone number, or file path. Often the executive, the EA, or a shared channel both are in. Pick one primary recipient.
-
-   **Important — the self-notification trap.** If `notification_channel` is `slack` or `imessage` AND `notification_target` is the same account connected to Composio (e.g., your own Slack handle from your own connected workspace, or your own number on iMessage), the message is delivered **silently** — Slack does not push self-DMs, and iMessage does not notify messages sent to your own Apple ID. For **self-pinging**, use `gmail` or `outlook` instead — the email lands in your inbox AND in Sent, with normal mobile/desktop notifications. For `slack` or `imessage`, route to a different recipient (typically the EA's handle, or a shared channel both you and the EA are in).
-3. **Decide where the ideal-week document will live.** Default: `client-profile/ideal-week.md` in the user's workspace. Override via `.claude/ideal-week-ops.local.md` (see customization notes).
-4. **Run `extract-ideal-week`.** The skill explains what an ideal week is, asks if the exec already has one documented, parses it if yes or runs the extraction interview if no, asks for the channel + recipient choice from step 2 (and surfaces the self-notification warning), and writes both the ideal-week document and a starter `.claude/ideal-week-ops.local.md`. Confirm before the file is finalized.
-5. **Pick how the scan gets triggered.** Two options, not mutually exclusive:
-   - **Manual** — invoke `scan-ideal-week` on demand at any time with phrases like "scan calendar", "what's wrong with tomorrow", or "is today's calendar clean". The skill works fully without scheduling.
-   - **Recurring** *(recommended for foolproofness)* — register a recurring task in your runtime that invokes `scan-ideal-week`. Recommended cadence: weekdays 5pm (flags tomorrow) + weekdays 7am (flags today). Wire this via your runtime's native mechanism (see Suggested tool wiring above). The plugin is agnostic about which scheduler.
-6. **First scan.** Run `scan-ideal-week` once manually to confirm the wiring works end-to-end and the flag output looks reasonable before relying on the schedule.
+1. **Run `setup`.** Detection-first onboarding. Walks you through Composio install (or detects your existing MCPs), picks calendar + notification tools, captures channel + recipient, surfaces the self-notification trap warning if you pick Slack to your own handle, writes `.claude/ideal-week-ops.local.md`. Resumable mid-flow.
+2. **Run `extract-ideal-week`.** Captures how your week should run (rhythms, deep-work blocks, protected time, VIP overrides, zone of genius). Synthesizes a structured ideal-week document and confirms with you before saving.
+3. **(Optional) Wire a recurring trigger.** If you want twice-daily automatic scans, register a recurring task in your runtime (Cowork Scheduled tasks, Claude Code `/schedule`, GitHub Actions cron, etc.) that invokes `scan-ideal-week`. Recommended cadence: weekdays 5pm (flags tomorrow) + weekdays 7am (flags today). Without this, invoke `scan-ideal-week` manually any time.
+4. **First scan.** Run `scan-ideal-week` once manually to confirm the wiring works end-to-end and the output looks right before relying on the schedule.
 
 ## Skills included
 
-- **`extract-ideal-week`** — *opinionated.* Onboarding flow. Explains the concept, checks for existing documentation, parses it or runs the standard 10 + 3 question interview (week rhythm + zone of genius), synthesizes a structured ideal-week document, confirms with the user, saves to the configured path. Resumable — if interrupted mid-interview, picks up where it left off.
-- **`scan-ideal-week`** — *opinionated.* Loads the documented ideal week, pulls calendar events for the target window (default: tomorrow if invoked at or after 4pm, today otherwise), checks every event against every rule, flags violations with severity (block / warning / nudge), generates concrete reschedule suggestions, sends a single summary notification. Designed to be invoked by a recurring trigger twice a day, but works on demand any time.
+- **`setup`** — *neutral.* One-time onboarding wizard. Detects whether the host's AI has calendar-read and notification-send capabilities wired (via Composio MCP, direct vendor MCPs, or any other source). Walks the user through wiring if missing. Captures notification channel + recipient. Surfaces the self-notification trap on Slack (warning, not blocker). Writes `.claude/ideal-week-ops.local.md`. Resumable. Re-runnable to refresh any field.
+- **`extract-ideal-week`** — *opinionated.* Captures the ideal week. Explains the concept, checks for existing documentation, parses it or runs the standard 10 + 3 question interview (week rhythm + zone of genius), synthesizes a structured ideal-week document, confirms with the user, saves to the configured path. Resumable — if interrupted mid-interview, picks up where it left off. Soft precondition check: warns if `setup` hasn't run, but allows proceeding.
+- **`scan-ideal-week`** — *opinionated.* Loads the documented ideal week, pulls calendar events for the target window (default: tomorrow if invoked at or after 4pm, today otherwise) from all configured calendar accounts (merged + de-duplicated), checks every event against every rule, flags violations with severity (block / warning / nudge), generates concrete reschedule suggestions, sends a single summary notification through the configured channel. Designed to be invoked by a recurring trigger twice a day, but works on demand any time. Hard fail if `setup` hasn't run.
 
 ## Customization notes
 
