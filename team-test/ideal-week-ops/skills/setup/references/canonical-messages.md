@@ -2,7 +2,7 @@
 
 These messages were adapted from the `conference-contact-capture` plugin's setup skill and scoped to the two capabilities ideal-week-ops needs (calendar read + notification send). The two copies are independent — future updates to the conference version do not auto-propagate.
 
-Section numbering matches the conference original where preserved, even though some sections are dropped, so cross-references between plugins stay readable.
+Section labels are descriptive plain names — not the cryptic numbering used in some sister plugins. Each section corresponds to a specific point in the `setup/SKILL.md` flow.
 
 > The setup skill loads this reference and uses these messages verbatim at the points specified in `SKILL.md`. They were drafted during the design phase to preserve a careful, explicit, non-jargony voice. Substitute `[bracketed]` placeholders at runtime; otherwise preserve the wording.
 
@@ -10,7 +10,7 @@ Section numbering matches the conference original where preserved, even though s
 
 ---
 
-### 10.1-MCP — MCP-aware Composio introduction
+### Intro — MCP-aware Composio introduction
 
 Used at: `SKILL.md` Step 1, when introducing the wiring choice.
 
@@ -22,7 +22,7 @@ Used at: `SKILL.md` Step 1, when introducing the wiring choice.
 >
 > Which would you like to do? (Default is Composio.)"
 
-### 10.2-MCP — Composio install walkthrough
+### Composio install walkthrough
 
 Used at: `SKILL.md` Step 2a, when user picks the Composio path. Lifted verbatim from conference-contact-capture's `setup/SKILL.md` §2a, with the apps list scoped to this plugin's two capabilities.
 
@@ -43,13 +43,13 @@ Direct the user (don't run shell commands for them):
 > - **(b) Got stuck on a specific step.** Tell me which one and what you saw.
 > - **(c) Composio's dashboard looks different from what I described.** Send a screenshot."
 
-### 10.3-MCP — Composio install help when user is stuck
+### Stuck help — install troubleshooting
 
 Used at: `SKILL.md` Step 2a, when user picks (c) "Dashboard looks different" or otherwise needs visual help.
 
 > "No worries. Send me a screenshot of what you see on your screen and tell me which device you're on (Mac / Windows / Linux). I'll walk you through it from there based on what you see."
 
-### 10.4-Phase0 — Capabilities not wired (ideal-week-ops pre-flight)
+### Capabilities not wired — pre-flight
 
 Used at: `SKILL.md` Step 0 / Step 1, when detection finds capabilities are missing. Substitute `[bracketed]` placeholders with the specific missing capabilities at runtime.
 

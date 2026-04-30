@@ -86,7 +86,7 @@ Branch:
 
 ### 1. Explain what's needed (full onboarding only)
 
-Use the message at `references/canonical-messages.md` §10.1, which says:
+Use the **Intro** message at `references/canonical-messages.md`, which says:
 
 > "This plugin needs two capabilities wired into your AI: read your calendar, and send one notification per scan. The easiest way to get both is to install **Composio MCP** — a free service that connects your AI to your tools (Google Calendar, Slack, Gmail, Outlook) in one place.
 >
@@ -98,7 +98,7 @@ If user picks Composio → Step 2a. If user picks own MCPs → Step 2b.
 
 ### 2a. Composio path (default)
 
-Direct the user (don't run shell commands for them) using `references/canonical-messages.md` §10.2-MCP:
+Direct the user (don't run shell commands for them) using the **Composio install walkthrough** message at `references/canonical-messages.md`:
 
 > "Here's the Composio setup, in order:
 >
@@ -122,7 +122,7 @@ On **(b)**: ask what error or screen they're seeing at that specific step. Commo
 - **Step 3 (connecting an app)** — OAuth window doesn't open or closes immediately → check popup blocker; suggest incognito window
 - **Step 5 (AI install)** — terminal command errors out for Claude Code → check `claude --version` is recent; suggest reinstalling Claude Code; check `claude mcp list` to see if the server already exists with the wrong name
 
-On **(c)**: deliver §10.3-MCP from `references/canonical-messages.md` and walk based on screenshots.
+On **(c)**: deliver the **Stuck help** section from `references/canonical-messages.md` and walk based on screenshots.
 
 Iterate until install succeeds.
 
