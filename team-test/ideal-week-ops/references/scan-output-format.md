@@ -104,7 +104,7 @@ Ideal-week scan — tomorrow (Mon Apr 27) — all clean ✅ — scanned 2026-04-
 
 ## Channel-specific rendering notes
 
-The implementation layer (e.g., `implementations/composio/scripts/notify_send.py`) adapts the above for each channel:
+The MCP notification tool adapts the above for each channel:
 
 - **Slack** — emoji severity markers render natively; use Slack mrkdwn for bold; collapse very long flag lists into a thread reply with header in the main message
 - **iMessage** — strip markdown formatting; preserve emoji; preserve line breaks

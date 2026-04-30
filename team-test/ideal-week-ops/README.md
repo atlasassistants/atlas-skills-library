@@ -35,9 +35,9 @@ The plugin's skills depend on these capabilities. Each is named abstractly — w
 | Calendar read | Composio (Google Calendar / Outlook routing — recommended), Google Calendar MCP direct, Outlook MCP direct |
 | File read + write | Filesystem MCP, native file tools |
 | Notification send | Composio (Slack / Gmail / Outlook routing — recommended), Slack MCP direct, iMessage MCP, plain file output |
-| Recurring trigger | Whatever recurring-task feature your runtime provides — Claude Cowork "Scheduled tasks" with frequency Weekdays, Claude Code `/schedule`, an SDK-driven scheduled agent, GitHub Actions cron, OS cron, anything else. The plugin is agnostic about which one. If your runtime has no recurring mechanism, the local OS-cron helper at `implementations/composio/scripts/setup_schedule.py` is provided as a fallback — note that local OS scheduling only fires when the device is on. |
+| Recurring trigger | Whatever recurring-task feature your runtime provides — Claude Cowork "Scheduled tasks" with frequency Weekdays, Claude Code `/schedule`, an SDK-driven scheduled agent, GitHub Actions cron, OS cron, anything else. The plugin is agnostic about which one. |
 
-The recommended wiring for calendar and notification is **Composio** because it routes both through one connection layer the user configures once at https://app.composio.dev. The plugin ships an opinionated Composio implementation under `implementations/composio/` with a setup walkthrough. Direct MCP wiring also works — see customization notes.
+The recommended wiring for calendar and notification is **Composio** (via MCP) because it routes both through one connection layer the user configures once at https://app.composio.dev. Direct MCP wiring also works — see customization notes.
 
 ## Installation
 
@@ -49,7 +49,7 @@ After installing, complete the first-run setup below — `extract-ideal-week` mu
 
 ## First-run setup
 
-1. **Wire calendar + notification capabilities.** If using Composio (recommended), follow [`implementations/composio/README.md`](implementations/composio/README.md) — covers Composio account setup, app installation for your runtime, and connecting Google Calendar plus a notification channel. If using direct MCPs, install Google Calendar MCP and one notification MCP yourself.
+1. **Wire calendar + notification capabilities.** If using Composio (recommended), install the Composio MCP via your runtime, then connect Google Calendar and a notification channel at https://app.composio.dev. If using direct MCPs, install Google Calendar MCP and one notification MCP yourself.
 2. **Decide who gets the daily ping, and on which channel.** Two settings to pick — both saved to `.claude/ideal-week-ops.local.md`:
    - **`notification_channel`** — where to send: `slack`, `imessage`, `gmail`, `outlook`, or `file`.
    - **`notification_target`** — who receives: a Slack handle, email address, phone number, or file path. Often the executive, the EA, or a shared channel both are in. Pick one primary recipient.
@@ -97,12 +97,12 @@ The full extraction framework lives at [`skills/extract-ideal-week/references/at
 
 **`scan-ideal-week` reports "no ideal week documented".** The scan skill reads from the path configured in `.claude/ideal-week-ops.local.md` (default `client-profile/ideal-week.md`). Run `extract-ideal-week` first, or update the config path if the document lives elsewhere.
 
-**Calendar events aren't being detected.** If using Composio, run the verification step in [`implementations/composio/README.md`](implementations/composio/README.md) — `COMPOSIO_MANAGE_CONNECTIONS` should show Google Calendar (or Outlook) as Connected. If using direct MCP, confirm the MCP is authenticated and can list events for the target date range. Also check that the calendar account being read is the one the exec actually schedules into (work vs personal).
+**Calendar events aren't being detected.** If using Composio, verify at https://app.composio.dev that Google Calendar (or Outlook) is connected. If using direct MCP, confirm the MCP is authenticated and can list events for the target date range. Also check that the calendar account being read is the one the exec actually schedules into (work vs personal).
 
 **Notifications aren't arriving.** Confirm the notification channel in `.claude/ideal-week-ops.local.md` matches an app you've connected (in Composio or via direct MCP). Run `scan-ideal-week --dry-run` (or the equivalent flag in your wiring) to print the notification body to terminal — if that looks right, the issue is in the send step, not the scan logic.
 
 **The send returns success but the recipient never sees the notification.** This is the self-notification trap. If `notification_channel` is `slack` or `imessage` AND `notification_target` is the same account connected to Composio, the send succeeds silently — Slack does not push self-DMs, and iMessage does not notify messages sent to your own Apple ID. Two fixes: (a) change `notification_target` in `.claude/ideal-week-ops.local.md` to a different recipient (the EA's handle, a shared channel both you and the EA are in); or (b) switch `notification_channel` to `gmail` or `outlook` — both deliver to inbox + Sent with normal notifications even when the recipient and the connected account are the same.
 
-**Scheduled scan didn't run.** Check that the recurring trigger was actually registered in your runtime — Cowork's Scheduled tasks list, Claude Code's scheduled-agents list, `crontab -l`, or wherever applicable. Local OS cron only runs when the device is on; if scans are silently missing, switch to a server-side scheduler (Cowork, scheduled agents, GitHub Actions).
+**Scheduled scan didn't run.** Check that the recurring trigger was actually registered in your runtime — Cowork's Scheduled tasks list, Claude Code's scheduled-agents list, `crontab -l`, or wherever applicable. If scans are silently missing, check your runtime's scheduling logs or switch to a server-side scheduler (Cowork, scheduled agents, GitHub Actions).
 
 **The flagged violations don't match what the exec actually cares about.** The rule severities and the rules themselves live in the ideal-week document — edit it directly. The scan skill is deterministic against whatever the document says, so adjust the source of truth, not the scan logic.
