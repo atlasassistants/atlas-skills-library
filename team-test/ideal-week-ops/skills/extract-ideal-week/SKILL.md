@@ -25,30 +25,48 @@ The scan skill can only flag what's been written down. This skill writes it down
 
 ## Steps
 
-### 0. Phase detection (always first)
+### 0. Precondition check — has setup run?
+
+Before the interview, check whether `.claude/ideal-week-ops.local.md` exists in the workspace.
+
+**If config exists**: proceed directly to the interview.
+
+**If config is missing**: tell the user (soft, not blocking):
+
+> "Heads up — `setup` hasn't run yet. Most users wire their calendar + notification capabilities first, so the daily scan works after this. Two options:
+>
+> - **Run `setup` first** (recommended, ~2–3 minutes). Then come back here.
+> - **Proceed with extraction anyway**. The ideal-week document gets written either way; the daily scan just won't run until setup is done.
+>
+> Which would you prefer?"
+
+If user picks setup first → tell them to invoke `setup`, then return here.
+If user picks proceed anyway → continue to the interview. The extraction works without wiring; only the scan needs it.
+
+### 1. Phase detection (always first)
 
 Before doing anything else, check state in this order:
 
 1. Does a document exist at the configured `ideal_week_path` (default `client-profile/ideal-week.md`)? → If yes, ask the user "an ideal week already exists at <path>. Do you want to (a) view it, (b) update it, or (c) re-extract from scratch?" Branch accordingly.
 2. Does a `.extract-in-progress.json` marker exist next to the configured path? → If yes, this is a resumed session. Load the marker, skip questions already answered, continue from the last unanswered one.
-3. Otherwise → fresh extraction. Continue to step 1.
+3. Otherwise → fresh extraction. Continue to step 2.
 
-### 1. Explain what an ideal week is
+### 2. Explain what an ideal week is
 
 Before asking any extraction questions, load and walk the user through `references/what-is-an-ideal-week.md` (the plugin-wide reference). This is non-negotiable — people interpret "ideal week" differently, and the skill's questions assume Atlas's specific definition (rhythms + protected blocks + rule buckets + zone of genius). Skip only if the user explicitly confirms they already know the framework.
 
-### 2. Check for existing documentation
+### 3. Check for existing documentation
 
 Ask the user directly:
 
 > "Do you already have your ideal week documented somewhere — in a doc, a file, a calendar template, anything? If yes, share the path or paste the contents and I'll work from that. If no, I'll walk you through the questions to extract it now."
 
-- **Existing doc provided** → go to step 3 (parse).
-- **None** → go to step 4 (interview).
+- **Existing doc provided** → go to step 4 (parse).
+- **None** → go to step 5 (interview).
 
 Do not guess locations or auto-search the filesystem. Ask explicitly.
 
-### 3. Parse existing documentation
+### 4. Parse existing documentation
 
 Read the document the user provides. Extract the following fields into the canonical format defined in `../../references/ideal-week-format.md`:
 
@@ -60,9 +78,9 @@ Read the document the user provides. Extract the following fields into the canon
 - VIP overrides
 - Zone of genius (what only the exec can do; what drains them; what to delegate)
 
-For any field the existing document does not cover, ask the corresponding question(s) from `references/extraction-questions.md`. Do not invent answers. Skip to step 5 once the canonical document is filled.
+For any field the existing document does not cover, ask the corresponding question(s) from `references/extraction-questions.md`. Do not invent answers. Skip to step 6 once the canonical document is filled.
 
-### 4. Interview from scratch
+### 5. Interview from scratch
 
 Walk through the 10 + 3 questions in `references/extraction-questions.md`, one at a time. Rules:
 
@@ -74,7 +92,7 @@ Walk through the 10 + 3 questions in `references/extraction-questions.md`, one a
 
 After all 13 questions are answered, synthesize them into the canonical format per `../../references/ideal-week-format.md`. Use `../../references/example-ideal-week.md` as the structural reference for the output.
 
-### 5. Display and confirm
+### 6. Display and confirm
 
 Show the synthesized document to the user. Ask explicitly:
 
@@ -82,34 +100,9 @@ Show the synthesized document to the user. Ask explicitly:
 
 Iterate on edits in conversation. Do not save until the user explicitly confirms.
 
-### 6. Save
+### 7. Save
 
 Write the confirmed document to the configured `ideal_week_path`. Default location: `client-profile/ideal-week.md` in the user's workspace. Create parent directories if needed. Delete the `.extract-in-progress.json` marker.
-
-### 7. Configure notification channel and recipient
-
-The scan skill needs two settings to deliver its daily ping. Ask the user, in order:
-
-1. **Channel** — "Where should the daily scan notification be delivered? Options: `slack`, `imessage`, `gmail`, `outlook`, or `file` (writes to a local markdown file)."
-2. **Recipient (target)** — "Who should receive it? This is the Slack handle, email address, phone number, or file path the message will be sent to. Often the executive themselves, the EA, or a shared channel both are in — pick one primary recipient."
-
-**Before saving, surface the self-notification trap if it applies.** If the chosen channel is `slack` or `imessage`, tell the user explicitly:
-
-> "Heads up — if the recipient is your own account (your own Slack handle from your own connected workspace, or your own number on iMessage), you will NOT be notified. Slack does not push self-DMs and iMessage does not notify messages sent to your own Apple ID — the message lands silently. For self-pinging, switch to `gmail` or `outlook` (the email lands in your inbox AND in Sent, with normal notifications). For `slack` or `imessage`, set the recipient to a different person — typically the EA's handle, or a shared channel both of you are in. Want to change either setting before I save?"
-
-Let the user adjust. Do not write the config until they confirm.
-
-Then write `.claude/ideal-week-ops.local.md` in the user's workspace with at minimum these keys:
-
-```yaml
----
-ideal_week_path: <path saved in step 6>
-notification_channel: <chosen channel>
-notification_target: <chosen recipient>
----
-```
-
-If the file already exists, update only `notification_channel` and `notification_target` (and `ideal_week_path` if it changed) — do not overwrite other settings the user may have configured (`calendar_provider`, `scan_schedule`, `dry_run`, etc.). Create parent directories if needed.
 
 ### 8. Offer to set up a recurring scan
 
