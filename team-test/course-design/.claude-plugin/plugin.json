@@ -1,0 +1,9 @@
+{
+  "name": "course-design",
+  "version": "0.1.0",
+  "description": "Six skills that walk an instructional designer through a full course-design workflow — needs analysis, Bloom's-aligned learning objectives, curriculum sequencing, lesson planning with Gagné's Nine Events, and assessment / rubric design — coordinated by a master orchestrator that follows the ADDIE framework and Backward Design alignment.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["course-design", "instructional-design", "training", "curriculum", "addie", "blooms-taxonomy", "assessment"]
+}
