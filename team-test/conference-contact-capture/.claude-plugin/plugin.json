@@ -1,0 +1,10 @@
+{
+  "name": "conference-contact-capture",
+  "version": "0.1.0",
+  "description": "Turn a post-event brain dump into researched briefs and personalized email drafts. Executive notes the people they met; the plugin researches each on LinkedIn, scrapes their company website, builds a structured brief, drafts a personalized follow-up email in the executive's voice, and routes the contact to their CRM. CRM-agnostic via Composio.",
+  "author": {
+    "name": "Atlas Assistants",
+    "url": "https://atlasassistants.com"
+  },
+  "tags": ["conference", "networking", "crm", "email", "linkedin", "composio", "atlas"]
+}

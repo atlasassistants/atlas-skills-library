@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+
+# Claude Code local
+.claude/settings.local.json
+.playwright-mcp/
+
+# Runtime artifacts (these live in user home, not the repo, but defensive)
+.linkedin-scraper-config.json
+.linkedin-scraper-queue.json
+
+# Archive remnants — keep history for these via git, don't re-track if they regenerate
+# (no patterns; we want _archive/ tracked once)
+
+# IDE
+.idea/
+*.iml
