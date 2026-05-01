@@ -37,6 +37,8 @@ You return from a conference, networking event, or any other meeting with notes 
 
 ## Phases
 
+> **Note on paths.** All `client-profile/...` paths in this skill resolve relative to the **workspace** — the user's current working directory at the time the skill is invoked (i.e. where the host runtime was started). Do NOT resolve them against the plugin's install directory; that location is read-only and shared across users. If a `client-profile/...` file appears missing, confirm the lookup is happening in the workspace before reporting setup as incomplete.
+
 ### Phase 0 — Pre-flight
 
 Verify in order:
