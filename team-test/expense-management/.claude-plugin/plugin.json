@@ -1,0 +1,9 @@
+{
+  "name": "expense-management",
+  "version": "0.1.0",
+  "description": "Pull monthly bookkeeping transactions via Composio, maintain a living subscriptions registry, and audit subscriptions for cancel/replace candidates with AI-replacement mini-specs. Pluggable per bookkeeping system; v0.1 ships QuickBooks.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["finances", "expenses", "subscriptions", "bookkeeping", "quickbooks", "composio", "audit"]
+}
