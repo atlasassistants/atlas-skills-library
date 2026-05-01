@@ -1,7 +1,7 @@
 # daily-reporting
 
 > Executive daily reporting — start-of-day planning and end-of-day closeout with continuity handoff, review/locking, and connector-agnostic source handling.
-> v0.1.0 — `lightweight` tier.
+> v0.1.0
 
 ## What it does
 

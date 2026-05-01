@@ -43,7 +43,7 @@ The plugin's skills depend on these capabilities. Each is named abstractly — w
 
 These are examples, not requirements. Pick what the host actually has.
 
-## Supported bookkeeping systems
+### Supported bookkeeping systems
 
 The plugin's integration layer is Composio. Each bookkeeping system that has a Composio toolkit can be supported via an `implementations/<system>/` folder. Status as of v0.1:
 
