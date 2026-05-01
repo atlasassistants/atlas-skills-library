@@ -276,9 +276,9 @@ Recommended batching pattern (works across email tools):
 
 If the email tool returns the full set offloaded to a sandbox/temp file, use the equivalent of a stream-and-batch approach against that file instead of reading it whole.
 
-If pull returns 30+ outbound emails: run the batched voice analysis above (use the LLM's reasoning — analysis structure follows the section headings in `../../client-profile/templates/email-voice.template.md`: Tone, Sentence structure, Vocabulary patterns, Opening patterns, Closing patterns, Formatting habits, Things this voice avoids, Sample emails).
+If pull returns 30+ outbound emails: run the batched voice analysis above (use the LLM's reasoning — analysis structure follows the section headings in `../../client-profile/templates/conference-email-voice.template.md`: Tone, Sentence structure, Vocabulary patterns, Opening patterns, Closing patterns, Formatting habits, Things this voice avoids, Sample emails).
 
-Write the consolidated result to `client-profile/email-voice.md` (workspace-relative). Show the synthesized voice profile to the user; ask if anything should be refined before saving.
+Write the consolidated result to `client-profile/conference-email-voice.md` (workspace-relative). Show the synthesized voice profile to the user; ask if anything should be refined before saving.
 
 If pull returns <10 outbound emails or errors: ask the user to paste 5–10 sample emails directly. Build the voice profile from those. If they decline, skip voice extraction (drafter will use generic professional tone — flag in profile as `Profile completeness: partial — voice missing`).
 
@@ -385,11 +385,11 @@ After the walk-through, fall through to step 10 (display, confirm, save).
 
 ## Output
 
-A confirmed `exec-conference-profile.md` plus optional `email-voice.md` and `exec-themes.md`, all in `client-profile/`. The profile is the source of truth for `capture-contacts`. If a CRM provider was picked, the target database and field mapping are filled here too (step 3.2) so `capture-contacts` can write records silently from its first run forward.
+A confirmed `exec-conference-profile.md` plus optional `conference-email-voice.md` and `exec-themes.md`, all in `client-profile/`. The profile is the source of truth for `capture-contacts`. If a CRM provider was picked, the target database and field mapping are filled here too (step 3.2) so `capture-contacts` can write records silently from its first run forward.
 
 ## Customization
 
-To change what voice extraction captures: edit `../../client-profile/templates/email-voice.template.md` (the section headings drive the analysis structure).
+To change what voice extraction captures: edit `../../client-profile/templates/conference-email-voice.template.md` (the section headings drive the analysis structure).
 
 To change what themes are asked about: edit `references/onboarding-questions.md` Question 5.
 

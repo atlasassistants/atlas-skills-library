@@ -16,7 +16,7 @@ You return from a conference, networking event, or any other meeting with notes 
 ## Inputs
 
 - **Profile** at `client-profile/exec-conference-profile.md` (created by `setup`)
-- **Email voice** at `client-profile/email-voice.md` (created by `setup`)
+- **Email voice** at `client-profile/conference-email-voice.md` (created by `setup`)
 - **Exec themes** at `client-profile/exec-themes.md` (created by `setup`)
 - **Available tools** in the host's loaded tool list — email read+draft, web search+extract, CRM (optional)
 - **Brain dump** from the user — free-form text, captured during Phase 1

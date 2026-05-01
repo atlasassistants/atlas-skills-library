@@ -69,7 +69,7 @@ Event name + date the executive met this person. Used for grouping briefs by eve
 
 ## Email structure
 
-Drafted in the executive's voice (read from `client-profile/email-voice.md`) with these four sections, in this order. Total length: 80–150 words. Anything longer reads like a pitch deck.
+Drafted in the executive's voice (read from `client-profile/conference-email-voice.md`) with these four sections, in this order. Total length: 80–150 words. Anything longer reads like a pitch deck.
 
 ### 1. Personal opener
 

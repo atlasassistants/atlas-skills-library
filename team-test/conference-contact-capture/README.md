@@ -121,7 +121,7 @@ You can re-run the wizard any time to refresh voice, themes, or change connectio
 
 ## 8. Customization notes
 
-- **Voice file** at `client-profile/email-voice.md` — refine after first generation if it doesn't sound like you. The drafter reads from this file directly.
+- **Voice file** at `client-profile/conference-email-voice.md` — refine after first generation if it doesn't sound like you. The drafter reads from this file directly.
 - **Themes file** at `client-profile/exec-themes.md` — edit any time to change what the briefs and emails emphasize.
 - **CRM field mapping** — captured during `setup` (step 3.2) and saved to your profile. If your CRM schema changes later (a mapped field is renamed or deleted), the next `capture-contacts` run detects the stale mapping, halts only the CRM phase, and tells you to re-run `setup` to remap. Briefs and email drafts still save normally even when CRM is broken.
 - **Methodology reference** at `skills/capture-contacts/references/atlas-conference-followup-methodology.md` — fork the plugin to override Atlas's defaults for brief structure or email tone.
@@ -145,6 +145,6 @@ Override by editing the methodology reference docs — skill bodies stay stable.
 
 **"My CRM records are missing fields."** Your CRM schema may have changed since onboarding. Re-run `setup` and the wizard will walk you through re-mapping only the fields that changed.
 
-**"The drafted email doesn't sound like me."** Edit `client-profile/email-voice.md` directly — add a paragraph describing the voice traits the auto-extraction missed. Or re-run `setup` after sending more emails (gives the analyzer more recent samples).
+**"The drafted email doesn't sound like me."** Edit `client-profile/conference-email-voice.md` directly — add a paragraph describing the voice traits the auto-extraction missed. Or re-run `setup` after sending more emails (gives the analyzer more recent samples).
 
 **"Setup says LinkedIn skill setup failed."** The most common cause is Chrome not being installed — install from google.com/chrome and re-run setup. Other causes: Python 3.10+ not installed, or the LinkedIn login session didn't complete in the browser window. The skill describes which one it hit; you don't need to debug manually.

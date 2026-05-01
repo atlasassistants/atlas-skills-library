@@ -44,9 +44,9 @@ This question is now handled by step 3 in `setup/SKILL.md` — capabilities are 
 
 After the pull and analysis, show the synthesized voice profile and ask:
 
-> "Here's what I learned about your writing style: [summary]. Read through `client-profile/email-voice.md` — anything to refine before saving?"
+> "Here's what I learned about your writing style: [summary]. Read through `client-profile/conference-email-voice.md` — anything to refine before saving?"
 
-**Captures:** `client-profile/email-voice.md`.
+**Captures:** `client-profile/conference-email-voice.md`.
 
 ---
 
