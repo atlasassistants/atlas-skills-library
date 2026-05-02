@@ -1,6 +1,6 @@
 # Canonical user-facing messages — energy-audit setup
 
-These messages are adapted from `plugins/ideal-week-ops/skills/setup/references/canonical-messages.md` and scoped to the four data sources energy-audit can read (calendar, task tool, meetings, Slack) plus notification (Gmail or Outlook only). The two copies are independent — future updates to ideal-week-ops do not auto-propagate.
+These messages are scoped to the four data sources energy-audit can read (calendar, task tool, meetings, Slack) plus notification (Gmail or Outlook only). 
 
 The setup skill loads this reference and uses these messages verbatim at the points specified in `SKILL.md`. They were drafted to preserve a careful, non-jargony voice. Substitute `[bracketed]` placeholders at runtime; otherwise preserve the wording.
 
