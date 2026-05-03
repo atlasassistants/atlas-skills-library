@@ -2,7 +2,8 @@
 
 This template is loaded by `energy-audit/SKILL.md` Step 3c (meetings) and Step 3d (Slack), populated at dispatch time, and sent to each sub-agent. The orchestrator passes:
 
-- The transcript references / message history for the batch
+- The transcript references / message history for the batch (recording IDs + access metadata for meetings; filtered messages inline for Slack)
+- For meetings only: the discovered transcript-fetch action slug (`[TRANSCRIPT_FETCH_ACTION_SLUG]`) — sub-agent calls this slug to fetch its own transcripts when summary metadata is insufficient
 - The cluster context (meetings only — tells the sub-agent it's working on a coherent group, not a random batch)
 - The full energy profile content
 - The 5 readiness criteria
@@ -21,6 +22,7 @@ You are extracting automation candidates from [meetings | Slack messages] for an
 - Audit window: [START_DATE] to [END_DATE]
 - Mode: [full | short_window]
 - Cluster context (meetings only): [CLUSTER_CONTEXT — e.g., "cluster: standup, total cluster size: 6 meetings, this batch: 3 of 6 (batch 1 of 2)"]
+- Transcript-fetch action slug (meetings only): [TRANSCRIPT_FETCH_ACTION_SLUG] — call this slug with a recording ID from the input block when you need full transcript content (see "Working from summaries first" below).
 
 The cluster context tells you whether you're seeing all of a recurring pattern, part of one, or a one-off. Use it to set your confidence: a single-meeting `ad_hoc` batch supports `weak`/`moderate` evidence at best; seeing 3 of 6 meetings in a `standup` cluster supports `strong` evidence for any pattern that recurs across the batch.
 
@@ -66,7 +68,7 @@ Return ZERO candidates if nothing meets the bar. Don't pad. The audit's hard cap
 
 ## Working from summaries first (meetings only)
 
-For meeting transcripts, work from the meeting summary + agenda + action items first. Only dive into the full transcript if the summary doesn't reveal a clear pattern. Most platforms (Fathom, Granola, Fireflies) auto-summarize — use that. This keeps context window usage manageable when the orchestrator dispatches multiple sub-agents in parallel.
+For meeting transcripts, work from the meeting summary + agenda + action items first (typically present in the list-action's response and inlined in `[INPUT_BLOCK]`). Only dive into the full transcript if the summary doesn't reveal a clear pattern — and when you do, call `[TRANSCRIPT_FETCH_ACTION_SLUG]` with the recording ID rather than guessing an action name. Most meeting platforms auto-summarize, so most batches won't need full-transcript fetches. This keeps context window usage manageable when the orchestrator dispatches multiple sub-agents in parallel.
 
 **Null-summary fallback.** If the meeting summary is null/missing for any recording in the batch (a common case — summaries are generated asynchronously and freshly-recorded meetings often have no summary yet), do NOT auto-fall-through to the full transcript. First inspect title + invitees + duration + recurrence-marker — for many meetings this metadata alone establishes the candidate's recurrence pattern + invitees + cadence. Fetch the full transcript ONLY if metadata is genuinely ambiguous AND the meeting is not a recurring instance (recurring meetings are pattern-self-evident from metadata alone). Full-transcript fetches against fan-out batches are expensive — Fathom's own pitfall doc warns transcripts can run hundreds to thousands of turns.
 
