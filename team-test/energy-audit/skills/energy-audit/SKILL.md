@@ -188,7 +188,8 @@ Form one Tier-2 cluster per non-empty category, named after the category (e.g., 
 **Dispatch one sub-agent per batch in parallel.** With a typical 14-day window of 15–25 meetings, this produces roughly 8–12 sub-agents (vs. the prior random-batches-of-3 shape which produced the same count but with incoherent slices).
 
 Each sub-agent receives the prompt loaded from `references/sub-agent-extraction-prompt.md` with these placeholders populated:
-- `[INPUT_BLOCK]` — the transcript references for the batch (IDs and access info; sub-agent fetches content as needed)
+- `[INPUT_BLOCK]` — the transcript references for the batch — recording IDs only, plus any access metadata returned by the discovered list-action (e.g., `meeting_tool_account_id` for Composio multi-account toolkits). The sub-agent fetches transcript content itself at run time using the slug from `[TRANSCRIPT_FETCH_ACTION_SLUG]`. Do NOT inline transcript bodies here — large transcripts trigger aggregator auto-offload mid-fan-out which is brittle.
+- `[TRANSCRIPT_FETCH_ACTION_SLUG]` — the transcript-fetch action slug discovered at the top of Step 3c. Each sub-agent calls this slug to fetch its own transcript when needed (per the prompt template's "Working from summaries first" + "Null-summary fallback" subsections). Pass-through verbatim — do not branch on the slug value.
 - `[CLUSTER_CONTEXT]` — the cluster name + cluster total size + this batch's position (e.g., `cluster: standup, total cluster size: 6 meetings, this batch: 3 of 6 (batch 1 of 2)`). Tells the sub-agent it's working on a coherent slice and how much of the cluster it's seeing.
 - `[PROFILE_CONTENT]` — the full energy profile content (read from Step 0)
 - `[START_DATE]` and `[END_DATE]` — the window dates from Step 1
