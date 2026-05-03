@@ -152,9 +152,17 @@ The remaining task list is the task signal for this audit.
 
 #### 3c. Meetings (sub-agent fan-out) — only if `meetings` block in config
 
-List available meeting transcripts for the window:
-- If `meetings.provider` is `fathom` / `granola` / `fireflies`: call that toolkit's "list transcripts for date range" function.
-- If `meetings.provider` is `notion` / `googledrive`: list files in the configured `meetings.location` (Notion DB or Drive folder), filtered by the window dates.
+> **Discover the actions; don't hardcode them.** The connected meeting toolkit (Fathom, Granola, Fireflies, Notion, Google Drive, or another) exposes its own action slugs. Don't branch on `if meetings.provider == fathom: ... elif granola: ...` — the toolkit slug captured at setup is a scope hint, not a decision tree.
+>
+> For an aggregator like Composio: call the toolkit-discovery capability with use-case queries scoped to `meetings.provider`. The audit needs two discovered actions:
+> - **list-action** — query: *"list meetings in date window"* (for direct providers) OR *"list files in folder"* (for `notion` / `googledrive` provider — the location string from `meetings.location` is the folder/DB scope). The response returns the toolkit-scoped slug + input schema.
+> - **transcript-fetch action** — query: *"fetch meeting transcript by recording ID"* (for direct providers) OR *"read file content by ID"* (for `notion` / `googledrive`). Each meetings sub-agent will call this action itself at Step 3c's fan-out, so capture the slug here for pass-through.
+>
+> For direct vendor MCPs (Pattern B), match by intent against the host's loaded tool list (`*list*meeting*` / `*list*transcript*` for the list-action; `*get*transcript*` / `*fetch*transcript*` / `*read*file*` for the fetch-action) rather than by hardcoded name.
+>
+> Save both slugs to running state as `meetings_list_action_slug` and `meetings_transcript_fetch_action_slug`. The fetch slug gets passed to each meetings sub-agent at the fan-out (Step 3c continuing below).
+
+Call the discovered list-action with the audit window dates. For `notion` / `googledrive` providers, scope the call by `meetings.location` (the folder or DB ID captured at setup). The response is the meetings list for the window — same downstream shape regardless of which toolkit is wired.
 
 **Cluster, then batch, then dispatch.** Same-pattern meetings share extraction patterns — splitting them across random batches fragments evidence and forces sub-agents to detect a recurring pattern from a partial slice. Group by pattern first, then batch within groups with a small cap so no single sub-agent is overwhelmed.
 
