@@ -97,6 +97,8 @@ Branch per source. Calendar + tasks read inline; meetings + Slack fan out to sub
 
 #### 3a. Calendar (inline) — only if `calendar` block in config
 
+> **Discover the list-events action.** Don't hardcode `<TOOLKIT>_LIST_EVENTS` per provider. For Composio: call the discovery capability with the use-case query *"list calendar events in date window"* scoped to the account's toolkit slug (`googlecalendar` or `outlook` from the account identifier). For direct vendor MCPs: match by intent against the host's loaded tool list (`*list*event*`). Capture the discovered slug to running state once per (toolkit × account) and reuse for each calendar in the per-account selection.
+
 For each account in `calendar.accounts`:
 
 - Look up the account's calendar selection in `calendar.calendar_ids[<account-id>]`. If the field is absent (config from a pre-`calendar_ids` version), fall back to `["primary"]` and add a one-line note to the report header: *"Calendar IDs not captured at setup — defaulted to each account's primary. Re-run `setup` to pick specific calendars."*
@@ -136,6 +138,8 @@ Don't attempt to translate the old field — it's too lossy in providers where a
 - `unknown` → halt with a setup-refresh pointer; don't guess at the filter shape.
 
 **Per-container override.** If `tasks.per_container` exists in config, the listed container IDs use the per-container `assignee_property` / `assignee_property_type` / `assignee_value` instead of the top-level fields.
+
+> **Discover the query/list action.** Don't guess `<TOOLKIT>_QUERY_*` from the toolkit slug. For Composio: call the discovery capability with the use-case query *"query container with filter and date range"* (or *"list tasks in flat list"* if `container_ids` is `["all"]`) scoped to `tasks.provider`. The response returns the toolkit-scoped slug + filter schema; build the filter object from the captured `assignee_property_type` per the type-shape table below using the schema as the source of truth. For direct vendor MCPs: match by intent (`*query*`, `*list*tasks*with*filter*`, `*search*`).
 
 **Query.** For each container in `tasks.container_ids`:
 - If the ID is the literal string `"all"`, call the toolkit's flat list-tasks function with the captured filter and the window dates (no container parameter).
@@ -202,6 +206,8 @@ Collect candidates from all meetings sub-agents into a single list. The light-de
 If a sub-agent fails (timeout, error, malformed response), log the failure and continue with whatever sub-agents did return. Don't silently retry.
 
 #### 3d. Slack (sub-agent fan-out) — only if `slack` block in config
+
+> **Discover the channel-history action.** Don't hardcode `SLACK_CONVERSATIONS_HISTORY` or any other vendor-specific slug. For Composio: call the discovery capability with the use-case query *"fetch channel message history for date range"* scoped to `slack`. For direct vendor MCPs: match by intent (`*channel*history*`, `*conversations*history*`, `*list*messages*`). Capture the slug once and reuse across the fan-out.
 
 For each channel in `slack.channels`, dispatch one sub-agent (cap of 1 channel per sub-agent — Slack histories can be large).
 
