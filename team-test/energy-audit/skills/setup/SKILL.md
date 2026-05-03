@@ -261,6 +261,25 @@ Load and show the **Meetings source two-tier** section from `references/canonica
 
 **Neither path works** — record `meetings: skipped` in running state. The audit will skip meetings and note it in the report header. Move on.
 
+**4c.4 Verify the picked meetings toolkit exposes the actions the audit needs.**
+
+Skip this substep if 4c saved `meetings: skipped`. Otherwise probe once before continuing — a toolkit can be connected without exposing the actions the audit calls (toolkit slug authorized for a different scope, vendor renamed an action, etc.):
+
+- **Composio (Pattern A).** Call the toolkit-discovery capability with two queries scoped to the picked `meetings.provider`. Pick the queries by provider class:
+  - For direct meeting providers (`fathom`, `granola`, `fireflies`): *"list meetings in the past 14 days"* and *"fetch meeting transcript by recording ID"*.
+  - For folder/DB providers (`notion`, `googledrive`): *"list files in folder"* (scoped to `meetings.location`) and *"read file content by ID"*.
+  
+  Confirm the response returns at least one action slug per query, scoped to the picked provider. Don't hardcode the names — read whatever slugs the discovery layer returns.
+- **Direct vendor MCPs (Pattern B).** Confirm the host's loaded tool list contains at least one tool whose name or description matches the list-action intent and one matching the fetch-action intent for the picked toolkit's prefix.
+
+If the probe returns no matching actions for either query, surface this to the user before continuing:
+
+> "Looks like [toolkit] is connected, but it doesn't have the access the audit needs — specifically, it can't [list your meetings / list files in [location]] or [pull a transcript / read file contents]. Want to pick a different meetings source, or sign in to [toolkit] again to check that read access is turned on?"
+
+If the user picks "different source," loop back to the **First ask** at the top of 4c. If "re-auth," send them back to Step 2a (Composio install walkthrough scoped to that one app) or Step 2b (Own-MCPs verification scoped to meetings).
+
+If the probe succeeds, capture nothing — the audit re-runs the same discovery at run time. The probe is just a setup-time sanity check to fail fast.
+
 #### 4d. Slack (only if Slack picked)
 
 Load and show the **Slack channel name-and-verify** section from `references/canonical-messages.md`. Initial ask. User pastes a list of channel names (`#exec-team` style) and/or channel IDs (`C0123ABCD` style).
