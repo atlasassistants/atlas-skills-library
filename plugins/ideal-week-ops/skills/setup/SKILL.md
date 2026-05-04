@@ -305,7 +305,7 @@ Tell the user (verbatim wording — keep it human, second-person, no "the exec")
 >
 > "(If you'd rather pause here and just keep the wiring done, say 'pause' and I'll stop. Re-run `setup` any time to change channels, swap calendars, or add a calendar account.)"
 
-Then immediately invoke the `extract-ideal-week` skill from this plugin. Do NOT require the user to type a separate trigger phrase — the chain happens in-conversation. The next skill runs its own Step 0 precondition check; because this skill just wrote the config, that check passes silently.
+Then load `skills/extract-ideal-week/SKILL.md` from this same plugin and continue execution from its Step 0 — same conversation, no user trigger phrase required. (`extract-ideal-week`'s Step 0 runs a precondition check that passes silently because this skill just wrote the config.)
 
 **If the user replies "pause" / "stop" / "just wiring for now" / similar:**
 
