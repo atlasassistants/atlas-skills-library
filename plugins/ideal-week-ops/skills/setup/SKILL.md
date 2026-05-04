@@ -295,15 +295,25 @@ Substitute the actual captured values for each field. If the user picked multipl
 
 After writing the config, delete `.ideal-week-onboarding-in-progress.json` (the marker is no longer needed).
 
-### 6. Hand-off
+### 6. Hand-off — chain directly into `extract-ideal-week`
 
-Tell the user:
+Wiring is done. The user said something like "set up ideal week ops" expecting the full arc — wiring + ruleset capture — so do NOT stop at wiring and wait for them to type another trigger phrase. Chain directly into the `extract-ideal-week` skill from this same plugin.
 
-> "Wiring done. Saved to `.claude/ideal-week-ops.local.md`. Next:
-> 1. Run `extract-ideal-week` to capture how your week should run (rhythms, deep-work blocks, protected time, VIP overrides).
-> 2. Then `scan-ideal-week` will be ready to flag calendar conflicts twice a day.
+Tell the user (verbatim wording — keep it human, second-person, no "the exec"):
+
+> "Wiring done — saved to `.claude/ideal-week-ops.local.md`. Now I'll capture how your week should actually run — rhythms, deep-work blocks, protected time, VIP overrides — so the daily scan has rules to check against. This takes about 10–15 minutes: one question at a time, free-form answers, you can pause and resume any time. Ready?"
 >
-> Re-run `setup` any time to change channels, swap calendars, or add a second calendar account."
+> "(If you'd rather pause here and just keep the wiring done, say 'pause' and I'll stop. Re-run `setup` any time to change channels, swap calendars, or add a calendar account.)"
+
+Then immediately invoke the `extract-ideal-week` skill from this plugin. Do NOT require the user to type a separate trigger phrase — the chain happens in-conversation. The next skill runs its own Step 0 precondition check; because this skill just wrote the config, that check passes silently.
+
+**If the user replies "pause" / "stop" / "just wiring for now" / similar:**
+
+Exit gracefully and tell them:
+
+> "Got it — wiring's saved. Re-run `setup` to change wiring later, or just say 'extract ideal week' when you're ready to capture your rules. Once both are done, `scan-ideal-week` will run on the schedule you set."
+
+Do not auto-chain in that case.
 
 ### Refresh mode (alternative entry from Step 0)
 
