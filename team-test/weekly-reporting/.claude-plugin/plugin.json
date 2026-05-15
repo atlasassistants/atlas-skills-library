@@ -1,0 +1,9 @@
+{
+  "name": "weekly-reporting",
+  "version": "0.1.0",
+  "description": "Executive weekly and monthly rollup — aggregates locked SOD and EOD reports into trend summaries, workload patterns, and goal-progress reviews. Companion to daily-reporting.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["reporting", "executive", "weekly", "monthly", "rollup", "planning", "productivity"]
+}

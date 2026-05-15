@@ -28,6 +28,7 @@ Connector names can vary by client or tool, for example:
 - `google-calendar`
 - `outlook-calendar`
 - `gmail`
+- `slack` (alternate connector for the `email` source family — see `../policies/source-filtering.md` §slack)
 - `executive-workflow`
 - `meeting-notes`
 - `prior-state`
@@ -260,7 +261,13 @@ For `connector_settings.gmail` specifically:
 - `high_signal_labels?: string[]` — gmail labels treated as high-signal for prioritization (e.g., `["Needs Action", "Urgent", "Important", "VIP"]`). See `../policies/source-filtering.md` (email signal prioritization).
 - `vip_senders?: string[]` — email addresses or domains treated as VIP for prioritization. See `../policies/source-filtering.md`.
 
-`google-calendar`, `outlook-calendar`, `gmail`, and `manual` in the starter template use only `enabled` today.
+For `connector_settings.slack` specifically:
+- `vip_senders?: string[]` — Slack handles or display names treated as VIP for prioritization (e.g., `["@russ", "@colin"]`). See `../policies/source-filtering.md` §slack.
+- `monitored_channels?: string[]` — channel IDs or names to monitor for @mentions (e.g., `["#atlas-product", "#client-zion"]`). If omitted, falls back to all channels the executive is a member of.
+- `high_signal_reactions?: string[]` — emoji reactions that flag a message as high-signal (e.g., `["🔴", "👀", "‼️"]`). See `../policies/source-filtering.md` §slack.
+- `resolved_reaction?: string` — emoji reaction that marks a message as handled and eligible for exclusion (e.g., `"✅"`). See `../policies/source-filtering.md` §slack.
+
+`google-calendar`, `outlook-calendar`, `gmail`, `slack`, and `manual` in the starter template use only `enabled` today.
 
 ## Validation status
 
