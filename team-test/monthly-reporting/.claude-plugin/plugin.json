@@ -1,0 +1,9 @@
+{
+  "name": "monthly-reporting",
+  "version": "1.0.0",
+  "description": "Executive monthly rollup — aggregates locked SOD and EOD daily reports across a full calendar month into a retrospective summary. Surfaces completed work, stalled items, recurring blockers, carryover patterns, and month-level priority shifts. Companion to daily-reporting.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["reporting", "executive", "monthly", "rollup", "planning", "productivity"]
+}

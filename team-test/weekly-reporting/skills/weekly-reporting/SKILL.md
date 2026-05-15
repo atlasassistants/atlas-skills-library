@@ -1,7 +1,7 @@
 ---
 name: weekly-reporting
-description: Generate a weekly or monthly rollup report for an executive by aggregating locked SOD and EOD daily reports. Use when an operator or exec needs a retrospective summary of the week or month — what was completed, what stalled, what kept recurring, and how priorities shifted over time.
-when_to_use: User says "weekly report", "weekly rollup", "weekly summary", "monthly report", "monthly rollup", "how did this week go", "how did this month go", "summarize the week", "summarize the month", "what did we complete this week", "what kept blocking us", "show me patterns". Also runs on a scheduled weekly or monthly trigger if configured.
+description: Generate a weekly rollup report for an executive by aggregating locked SOD and EOD daily reports across the current or last ISO week. Use when an operator or exec needs a retrospective summary of the week — what was completed, what stalled, what kept recurring, and how priorities shifted day over day.
+when_to_use: User says "weekly report", "weekly rollup", "weekly summary", "how did this week go", "summarize the week", "what did we complete this week", "what kept blocking us this week", "show me this week's patterns", "close out the week", "week in review". Also runs on a scheduled Friday EOD or Monday SOD trigger if configured.
 atlas_methodology: neutral
 ---
 
@@ -12,25 +12,15 @@ Aggregate locked daily reports into a retrospective summary for the executive.
 This skill is a companion to `daily-reporting`. It does not generate new
 daily reports — it reads what has already been locked and finds the patterns.
 
-## Modes
-
-- `weekly` — aggregates locked reports across the current or last ISO week
-  (Monday through Friday, 5 working days)
-- `monthly` — aggregates locked reports across the current or last calendar
-  month
-
-The operator specifies the mode at runtime. If no mode is given, default
-to `weekly`.
-
 ## Scope
 
 This skill answers:
-- what the executive completed across the period
+- what the executive completed across the week
 - what stalled or recurred as a blocker
 - how often items carried forward without resolution
 - how priorities shifted day over day
 - what support-layer work affected execution
-- what patterns in the exec's week or month are worth surfacing
+- what patterns in the exec's week are worth surfacing
 
 It does not:
 - re-run or re-generate daily reports
@@ -43,19 +33,20 @@ Read locked report files from the configured reports directory
 (default: `areas/daily-reports/reports/`).
 
 Include all files matching the naming pattern `sod-YYYY-MM-DD.md` and
-`eod-YYYY-MM-DD.md` within the target date range.
+`eod-YYYY-MM-DD.md` within the current or last ISO week (Monday through
+Friday, 5 working days).
 
 **Minimum data rule:** if fewer than 3 locked EOD files exist within the
 target window, do not fabricate trends. Draft the narrowest honest summary
 possible and flag the gap explicitly: state how many locked EODs were found
 and that patterns require more data.
 
-If no locked files exist for the period, return a blocked status with a
+If no locked files exist for the week, return a blocked status with a
 clear explanation.
 
 ## Produce
 
-- `completed_items_rollup` — all completed items across the period, grouped
+- `completed_items_rollup` — all completed items across the week, grouped
   by day
 - `stalled_items_rollup` — items that appeared as stalled across multiple
   days
@@ -65,8 +56,8 @@ clear explanation.
 - `priority_shifts` — priorities that were replaced, dropped, or added
   mid-week
 - `support_work_summary` — support-layer work that materially affected
-  executive execution across the period
-- `narrative_summary` — a short synthesized narrative of the period (one of
+  executive execution across the week
+- `narrative_summary` — a short synthesized narrative of the week (one of
   the narrative slots that may be polished — see output rules below)
 
 ## Output rules
@@ -77,7 +68,7 @@ clear explanation.
   report content. Do not rephrase or editorialize.
 - `narrative_summary` is the only field that may be synthesized. Keep it
   to 3–5 sentences. Surface the most important pattern or signal from the
-  period — do not recap every item.
+  week — do not recap every item.
 - Do not invent completed work, blockers, or priorities not present in the
   source files.
 
@@ -85,18 +76,29 @@ clear explanation.
 
 | Output | Target | When |
 |--------|--------|------|
-| Weekly or monthly rollup report | configured rollup delivery destination | after aggregation is complete and minimum data rule is met |
+| Weekly rollup report | configured rollup delivery destination | after aggregation is complete and minimum data rule is met |
 
 **Naming:** return the result as `rollup_report`. When delivered to a
 document system, the title should follow the pattern
-`Weekly Rollup — [Month DD–DD, YYYY]` or `Monthly Rollup — [Month YYYY]`.
+`Weekly Rollup — [Month DD–DD, YYYY]`.
 
 **Skip write when:** minimum data rule is not met, or no locked files exist
-for the period. Surface the reason instead.
+for the week. Surface the reason instead.
+
+## Timing
+
+This skill can be triggered in two ways — both are valid:
+
+- **Friday EOD** — closes the week while it's fresh. All 5 daily reports
+  are locked, no gaps. Recommended for execs who want a clean week-close.
+- **Monday SOD** — serves as a week-in-review refresher before the new
+  week starts. Run after the prior Friday's EOD has locked.
+
+Configure one as a scheduled trigger, or run on demand.
 
 ## Workflow
 
-1. Resolve the target date range from the requested mode and report date.
+1. Resolve the target date range — current or last ISO week (Mon–Fri).
 2. List all locked report files in the configured reports directory that
    fall within the date range.
 3. Check the minimum data rule — at least 3 locked EOD files required.
@@ -108,8 +110,8 @@ for the period. Surface the reason instead.
 8. Deliver to the configured rollup delivery destination. Page body should
    follow this section order: Summary (narrative), Completed, Stalled,
    Recurring Blockers, Carryover Log, Priority Shifts, Support Work,
-   Skipped Files (if any). Include the date range, mode, and locked-EOD
-   count in the page header.
+   Skipped Files (if any). Include the date range and locked-EOD count in
+   the page header.
 
 ## If data is missing or malformed
 
@@ -121,15 +123,12 @@ for the period. Surface the reason instead.
 
 ## Configuration
 
-The reports directory path and Notion destination are deployment-specific.
-
 Defaults:
 - `reports_directory`: `areas/daily-reports/reports/`
 - `notion_parent_page_id`: workspace-level (no parent) if not set
 
 Operators should configure `notion_parent_page_id` during setup to ensure
-rollups land in the right place for the exec and EA to find them. A shared
-Reports or Weekly Reviews page is the recommended parent.
+rollups land in the right place for the exec and EA to find them.
 
 ## Dependencies
 
