@@ -58,6 +58,12 @@ This plugin uses a fixed set of six source keys. The canonical list lives in `..
 
 Connector names can differ. The deployment config maps these source keys to the connector being used.
 
+**`email` source family — available connectors:**
+- `../gmail/` — reads Gmail inbox: flags, pending decisions, unresolved threads, risks
+- `../slack/` — reads Slack DMs and @mentions: same `inbox_flags` output shape as Gmail
+
+Point `source_map.email.provider` at the connector that matches the exec's primary messaging tool. One connector active at a time — if the exec lives in Slack, use Slack; if Gmail, use Gmail.
+
 ## Runtime model
 
 Normal runtime input should stay small.
