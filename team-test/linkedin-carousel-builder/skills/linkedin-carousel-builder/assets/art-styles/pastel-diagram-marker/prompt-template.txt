@@ -1,0 +1,77 @@
+CONTEXT: This illustration supports a LinkedIn business carousel for executives
+and founders. Subject matter is business, work, productivity, strategy, and
+tools — never personal life, family scenes, casual entertainment, vacation
+imagery, food, sports, or unrelated objects.
+
+Illustration in a pastel-marker information-design aesthetic.
+
+Genre references: information-design infographics in the spirit of Hans Rosling
+data viz, Bloomberg explainer charts, and Refinery29 explainer graphics — all
+rendered with hand-drawn pastel marker treatment. The hero of every image is
+real data, a real diagram, OR a single narrative metaphor scene (when the
+source frames its idea around a concrete metaphor — e.g., a figure on a
+treadmill for "stuck in a cycle"). Marker is HOW it's drawn — not a limit on
+WHAT is drawn.
+
+Illustration vocabulary:
+- A concrete data viz or diagram as the focal element — bar chart, line chart,
+  decision tree, before/after pair, ranked list, or simple timeline
+- OR a single narrative metaphor scene as the focal element — one or two
+  simple figures or objects (e.g., a figure on a treadmill clutching a box,
+  a person at a fork between two signposts, a small tower under construction)
+  — rendered with the same pastel marker treatment as data viz
+- Rendered as if hand-drawn in pastel marker on heavy off-white paper near
+  {background_color}
+- Color palette: {accent_name} ({accent_color}) is the DOMINANT chromatic of
+  the image — used for the focal data point, the most-emphasized marker
+  stroke, AND at least one annotation. Secondary colors are 2–3 muted
+  neutrals (off-white, soft grey, warm cream) used only for context. The
+  paper is {background_color}. NO other saturated colors — peach, pink,
+  teal, and mint are NOT permitted in this image unless they happen to be
+  {accent_name} itself.
+- Hand-written marker annotations pointing to specific data points
+- One or two curved arrows or circled callouts directing the eye
+- Subtle paper texture and slight marker bleed
+- One clear focal data point that the eye lands on first
+- Generous breathing room — no edge-to-edge clutter
+- Aspect: square, 1024x1024
+
+Avoid:
+- Cartoon icons (gift boxes, magnifying glasses, sparkles, cute objects)
+- Centered text labels treated as the subject of the image
+- Kindergarten or classroom-poster vocabulary
+- Generic stacked rectangles labeled with single words
+- Heavy outlines or flat-vector treatment
+
+Visual intent: {visual_intent}
+
+BRAND MARKS AND APP ICONS: when the Visual Intent names a real app, service,
+or company by name (Gmail, Slack, QuickBooks, Notion, Figma, etc.), render it
+as an abstract, neutral icon that suggests the tool's function — NEVER as the
+company's actual logo, brand wordmark, or branded colors. Use the art style's
+own vocabulary to render a recognizable category icon: an envelope for email,
+a chat bubble for messaging, a receipt or ledger for accounting, a calendar
+grid for scheduling, a stylized window for a code editor. Real brand logos
+break the carousel's visual coherence and create trademark risk.
+
+TEXT IN THE IMAGE: render text ONLY when (a) it appears in the embedded
+annotation below, OR (b) it is a concrete label explicitly named in the Visual
+Intent above (e.g., axis labels named verbatim, data-point callouts named in
+the intent). Do NOT invent additional narrative labels, captions, or
+fabricated numbers / percentages that aren't either in the embedded annotation
+or named in the Visual Intent. When unsure whether to add label text, omit it.
+
+IMPORTANT — the following annotation should appear EXACTLY ONCE inside the
+artwork AS A HAND-WRITTEN MARKER NOTE, woven into the composition as a real
+callout pointing to a data point (NOT as a title or centered label):
+{embedded_message}
+
+The marker note MUST be legible, MUST be spelled exactly as provided, and MUST
+feel like a real annotator's note — slightly imperfect handwriting in pastel
+marker, sized like a real chart annotation, not a slide headline.
+
+Do NOT duplicate the annotation text elsewhere in the image. If any words from
+the annotation also appear as labels on diagram elements (boxes, chart axes,
+icons), use those labels as the diagram labels ONLY — do not re-render them as
+the marker note. The marker note is the SINGLE editorial callout for this
+artwork; diagram labels are separate visual elements.

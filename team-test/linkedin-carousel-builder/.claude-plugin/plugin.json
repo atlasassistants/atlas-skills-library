@@ -1,0 +1,8 @@
+﻿{
+  "name": "linkedin-carousel-builder",
+  "version": "0.1.0",
+  "description": "Generate save-worthy LinkedIn carousel posts from articles, newsletters, or transcripts. Produces a brand-themed PDF carousel plus a companion LinkedIn post, both rooted in the source's actual voice.",
+  "tags": ["linkedin", "carousel", "content", "social-media", "publishing", "executive"],
+  "author": "Atlas Assistants",
+  "license": "MIT"
+}

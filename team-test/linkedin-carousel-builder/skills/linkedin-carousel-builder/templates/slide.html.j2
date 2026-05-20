@@ -1,0 +1,118 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  @page { size: 1080px 1350px; margin: 0; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1080px; height: 1350px;
+    background: {{ brand.colors.background }};
+    color: {{ brand.colors.body }};
+    font-family: '{{ brand.fonts.body }}', sans-serif;
+    display: flex; flex-direction: column;
+    padding: 64px 80px;
+    box-sizing: border-box;
+  }
+  .top-row {
+    flex: 0 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 32px;
+  }
+  .brand-mark {
+    font-family: '{{ brand.fonts.headline }}', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: {{ brand.colors.accent }};
+  }
+  .slide-number {
+    font-size: 22px;
+    color: {{ brand.colors.body }};
+    opacity: 0.5;
+  }
+  .header { flex: 0 0 auto; }
+  h1 {
+    font-family: '{{ brand.fonts.headline }}', sans-serif;
+    color: {{ brand.colors.headline }};
+    font-size: 44px;
+    line-height: 1.2;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+  }
+  .support {
+    font-size: 22px;
+    line-height: 1.4;
+    color: {{ brand.colors.body }};
+    opacity: 0.75;
+    margin: 0;
+    max-width: 880px;
+  }
+  .illustration {
+    flex: 1 1 auto;
+    display: flex; align-items: center; justify-content: center;
+    margin: 32px 0;
+    min-height: 0;
+  }
+  .illustration img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .footer {
+    flex: 0 0 auto;
+    font-size: 20px;
+    color: {{ brand.colors.body }};
+    opacity: 0.65;
+  }
+  /* Typography-only slides (no illustration) — fill the canvas with presence
+     instead of leaving the middle empty. Used for recap, CTA, or any slide
+     intentionally rendered without an illustration. */
+  .header.typography-only {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .header.typography-only h1 {
+    font-size: 88px;
+    line-height: 1.1;
+    margin-bottom: 28px;
+  }
+  .header.typography-only .support {
+    font-size: 36px;
+    line-height: 1.35;
+    opacity: 0.85;
+    max-width: 920px;
+  }
+  /* Cover slide (slide_number == 1) — headline should DOMINATE for thumb-stop
+     role on LinkedIn feed. Applies whether the cover has an illustration or
+     not, because covers always need bigger typography than body slides. */
+  .header.cover h1 {
+    font-size: 80px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .header.cover .support {
+    font-size: 32px;
+    line-height: 1.35;
+    opacity: 0.85;
+    max-width: 920px;
+  }
+</style></head><body>
+  <div class="top-row">
+    <span class="brand-mark">{{ brand.brand_mark or brand.footer_brand_mark or "" }}</span>
+    <span class="slide-number">{{ slide_number }}/{{ total_slides }}</span>
+  </div>
+  {% if illustration_data_uri %}
+  <div class="header{% if slide_number == 1 %} cover{% endif %}">
+    <h1>{{ headline }}</h1>
+    {% if supporting_line %}<p class="support">{{ supporting_line }}</p>{% endif %}
+  </div>
+  <div class="illustration"><img src="{{ illustration_data_uri }}" alt="{{ alt_text }}"></div>
+  {% else %}
+  <div class="header typography-only{% if slide_number == 1 %} cover{% endif %}">
+    <h1>{{ headline }}</h1>
+    {% if supporting_line %}<p class="support">{{ supporting_line }}</p>{% endif %}
+  </div>
+  {% endif %}
+  <div class="footer">
+    {{ brand.footer_handle }}
+  </div>
+</body></html>
