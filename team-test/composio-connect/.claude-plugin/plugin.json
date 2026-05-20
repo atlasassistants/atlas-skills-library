@@ -1,0 +1,9 @@
+{
+  "name": "composio-connect",
+  "version": "0.1.0",
+  "description": "Shared Composio onboarding for Atlas plugins. Walks the user through installing Composio, connecting specific toolkits, re-authorizing when needed, and verifying each connection works. Other Atlas plugins invoke this one instead of writing their own Composio setup flow.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["composio", "onboarding", "shared", "infrastructure", "mcp", "atlas"]
+}
