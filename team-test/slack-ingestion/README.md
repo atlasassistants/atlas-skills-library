@@ -55,7 +55,7 @@ For now, point your plugin loader at the `team-test/slack-ingestion/` directory 
 
 ## First-run setup
 
-1. Copy `client-profile/templates/slack-config.md` to a live location (e.g. `client-profile/slack-config.md` in the deployed plugin, or a vault-side location the skill can read).
+1. Copy `client-profile/templates/slack-config.template.md` to a live location (e.g. `client-profile/slack-config.md` in the deployed plugin, or a vault-side location the skill can read).
 2. Fill in the config blocks: exec identity (and optional EA handle), VIP senders, monitored channels, high-signal reactions, default window, output path. Defaults are documented inline in the template.
 3. Confirm the Slack MCP is authenticated for the exec's workspace — run any read-only Slack tool once to verify.
 4. Confirm the digest output path exists (default `slack-ingest/` at vault root, parallel to `meetings/`).

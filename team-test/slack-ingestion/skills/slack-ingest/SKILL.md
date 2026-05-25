@@ -85,7 +85,7 @@ This keeps downstream prep skills' assumptions about file presence intact.
 
 ## Error handling
 
-- **Missing config** — halt with a message pointing to `client-profile/templates/slack-config.md`.
+- **Missing config** — halt with a message pointing to `client-profile/templates/slack-config.template.md`.
 - **Slack auth failure (entire workspace)** — halt and surface the auth error; do not write a partial digest.
 - **Unresolvable handle (single VIP or EA)** — never halt. Skip the handle, record it in `skipped_handles`, surface in the digest's Configuration notes section. The rest of the run continues.
 - **One fetch path fails, others succeed** — log the failed path in the digest Summary (`Note: monitored-channels path failed — see logs.`) and continue with the remaining paths. Never silently drop a slice.
