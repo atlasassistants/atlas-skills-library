@@ -1,0 +1,9 @@
+{
+  "name": "slack-ingestion",
+  "version": "0.1.0",
+  "description": "Ingests Slack messages into the second brain as structured digests. Extracts decisions, commitments, and open threads from DMs and monitored channels over a configurable time window.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["slack", "second-brain", "ingestion", "productivity"]
+}
