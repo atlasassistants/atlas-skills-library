@@ -2,6 +2,17 @@
 
 A collection of Claude Code plugins and portable skills built and battle-tested by Atlas Assistants. Install what you need, customize for your workflow, and let your agents do more out of the box.
 
+## Getting Started
+
+Most Atlas plugins connect to external apps (calendar, email, project management, etc.) through Composio. Install `composio-connect` first — it handles Composio onboarding once, then every Atlas plugin you install uses it. See [composio-setup-guide.md](composio-setup-guide.md) for the quick start.
+
+```
+/plugin marketplace add colin-atlas/atlas-skills-library
+/plugin install composio-connect@atlas
+```
+
+After that, install any Atlas plugin you want and run its setup — it'll automatically hand off to `composio-connect` for the Composio steps.
+
 ## What's inside
 
 Public plugins live under `plugins/` and are listed in the marketplace manifest. Each one is independently installable via the Claude Code marketplace flow. See each plugin's own README for details.
