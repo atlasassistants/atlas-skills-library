@@ -19,11 +19,11 @@ Executive assistants and agent operators who run `daily-reporting` and want a we
 
 ## 4. Suggested tool wiring
 
-| Capability | Claude Code tool |
-|------------|-----------------|
-| Read report files | `Read` |
-| List reports directory | `Bash` (find / ls) or `Glob` |
-| Create Notion page | Notion MCP (`notion-create-pages`) |
+| Capability | Common options |
+|---|---|
+| File reading | Filesystem MCP, or any agent runtime's local file-read capability |
+| Directory listing by pattern | Filesystem MCP, shell execution, or a built-in glob capability |
+| Notion page creation | Notion MCP (`notion-create-pages`) |
 
 Notion MCP is required for delivery. The skill reads from local locked report files and writes the rollup to Notion.
 

@@ -65,7 +65,7 @@ clear explanation.
 ## Output rules
 
 - List-typed fields (`completed_items_rollup`, `stalled_items_rollup`,
-  `persistent_blockers`, `carryover_log`, `priority_shifts`,
+  `recurring_blockers`, `carryover_log`, `priority_shifts`,
   `support_work_summary`) must be verbatim aggregations of the source
   report content. Do not rephrase or editorialize.
 - `narrative_summary` is the only field that may be synthesized. Keep it
