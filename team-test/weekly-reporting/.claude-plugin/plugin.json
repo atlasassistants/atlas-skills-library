@@ -1,0 +1,9 @@
+{
+  "name": "weekly-reporting",
+  "version": "1.0.0",
+  "description": "Executive weekly rollup — aggregates locked SOD and EOD daily reports into a Friday-close or Monday-refresh summary. Surfaces completed work, recurring blockers, stalled items, carryover patterns, and priority shifts across the ISO week. Companion to daily-reporting.",
+  "author": {
+    "name": "Atlas Assistants"
+  },
+  "tags": ["reporting", "executive", "weekly", "rollup", "planning", "productivity"]
+}

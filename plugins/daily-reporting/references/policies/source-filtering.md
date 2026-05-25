@@ -65,6 +65,29 @@ The filtering rules below are Atlas defaults based on typical executive noise pr
 3. Recency (last 7 days).
 4. Meeting had executive attendance.
 
+### slack
+
+This section applies when `source_map.email.provider` is `slack`. Slack is an alternate connector for the `email` source family — it delivers the same `inbox_flags` shape as `gmail` but reads from Slack DMs and channel @mentions rather than email threads.
+
+**Noise exclusion:**
+- Drop messages from bots and integration accounts (common patterns: `Slackbot`, `/bot`, `/app`, `[APP]`).
+- Drop automated workflow notifications (Slack Workflow Builder outputs, system-generated alerts).
+- Drop channel messages where the executive is not directly @mentioned.
+- Drop threads the executive has already reacted to with a deployment-configured resolved reaction (e.g. ✅). Configurable via `connector_settings.slack.resolved_reaction`.
+- Drop messages outside the retrieval window.
+
+**Signal prioritization** (rank remaining messages by):
+1. DM from a VIP sender. Configurable via `connector_settings.slack.vip_senders` (Slack handles or display names treated as VIP).
+2. Message starred or saved by the executive or their EA.
+3. Message carries a deployment-configured high-signal reaction. Configurable via `connector_settings.slack.high_signal_reactions` (e.g. `["🔴", "👀", "‼️"]`).
+4. Direct @mention of the executive in a monitored channel. Configurable via `connector_settings.slack.monitored_channels`.
+5. DM thread where the executive's most recent message has not received a reply within the retrieval window (pending reply).
+
+**Scope rule:** this connector is scoped to DMs between the executive and VIP contacts, channel messages where the executive is directly @mentioned, and messages starred/saved/reacted to with a high-signal reaction. It does not scan all channels the executive is a member of.
+
+If `connector_settings.slack.vip_senders` is not configured, fall back to DMs from the executive's direct manager and direct reports only.
+If `connector_settings.slack.monitored_channels` is not configured, fall back to @mentions in all channels the executive is a member of.
+
 ### prior_state
 
 No filtering. Already shape-validated by the `structured_state` schema and the v1.0 corrupted-prior-state rule in `continuity-model.md`.
