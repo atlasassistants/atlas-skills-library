@@ -1,0 +1,70 @@
+CONTEXT: This illustration supports a LinkedIn business carousel for executives
+and founders. Subject matter is business, work, productivity, strategy, and
+tools — never personal life, family scenes, casual entertainment, vacation
+imagery, food, sports, or unrelated objects.
+
+Illustration in a clean SaaS / B2B tech brand-illustration aesthetic.
+
+Genre references: Stripe.com brand illustration, Linear product marketing,
+Notion landing-page heroes, Vercel and Figma documentation illustrations. The
+hero of every image is a stylized product surface or abstract data composition —
+never a button list. The clean-SaaS treatment is HOW it's drawn, never WHAT
+is drawn.
+
+Illustration vocabulary:
+- Isometric or top-down composition with 2–3 stylized product surfaces (cards,
+  panels, dashboards, list views) at slight depth
+- Abstract data marks woven into the surfaces (small bar groups, dot grids,
+  sparkline glimpses, badge clusters)
+- One stylized cursor, hand, or pointer mark indicating a single interaction
+- Background: {background_color}, generous negative space, soft shadow under
+  each surface for grounding
+- Color: {accent_name} ({accent_color}) is the DOMINANT chromatic — appears as
+  the primary fill or stroke on at least one product surface, the cursor or
+  pointer mark, AND at least one data mark (a bar in a chart, a highlighted
+  dot, an emphasis tag). Other colors are restricted to {background_color},
+  white or off-white surfaces, and soft greys for context. NO other saturated
+  colors.
+- Subtle geometric secondary elements: dotted lines, soft squares, a single
+  arrow, a connector mark
+- Aspect: square, 1024x1024
+
+Avoid:
+- Stack of identical rounded buttons with single-word labels (UI mockup feel)
+- More than one accent color or competing focal areas
+- Cartoon avatars or 3D blocky toys
+- Heavy outlines, drop shadows, or skeuomorphic flourishes
+- Clip-art icon clusters
+
+Visual intent: {visual_intent}
+
+BRAND MARKS AND APP ICONS: when the Visual Intent names a real app, service,
+or company by name (Gmail, Slack, QuickBooks, Notion, Figma, etc.), render it
+as an abstract, neutral icon that suggests the tool's function — NEVER as the
+company's actual logo, brand wordmark, or branded colors. Use the art style's
+own vocabulary to render a recognizable category icon: an envelope for email,
+a chat bubble for messaging, a receipt or ledger for accounting, a calendar
+grid for scheduling, a stylized window for a code editor. Real brand logos
+break the carousel's visual coherence and create trademark risk.
+
+TEXT IN THE IMAGE: render text ONLY when (a) it appears in the embedded
+annotation below, OR (b) it is a concrete label explicitly named in the Visual
+Intent above (e.g., a product-surface title named verbatim). Do NOT invent
+additional UI text (sample data rows, fabricated metrics like "98% uptime" or
+"$4.2K", made-up button labels, captions) unless those words appear in the
+embedded annotation or Visual Intent. When unsure whether to add label text,
+omit it — let the surface composition speak.
+
+IMPORTANT — the following short phrase should appear EXACTLY ONCE inside the
+artwork as a LABEL ON ONE OF THE PRODUCT SURFACES (e.g. a card title, a row
+label, or a badge), rendered in clean geometric sans-serif typography that
+feels native to the surface it sits on:
+{embedded_message}
+
+The text MUST be legible, MUST be spelled exactly as provided, and MUST feel
+like a real product UI label — not a slide headline pasted on top.
+
+Do NOT duplicate the label text elsewhere in the image. If any words from the
+label also appear as other surface labels (badges, row titles, card headings),
+keep those other labels distinct — do not re-render the same phrase as both
+the focal product-surface label AND a secondary element label.

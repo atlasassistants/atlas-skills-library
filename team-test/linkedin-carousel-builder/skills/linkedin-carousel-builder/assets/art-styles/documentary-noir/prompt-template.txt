@@ -1,0 +1,77 @@
+CONTEXT: This illustration supports a LinkedIn business carousel for executives
+and founders. Subject matter is business, work, productivity, strategy, and
+tools — never personal life, family scenes, casual entertainment, vacation
+imagery, food, sports, or unrelated objects.
+
+Illustration in a documentary-noir photographic aesthetic.
+
+Genre references: Magnum Photos street photography, Sebastião Salgado's social
+documentary work, Polaroid noir aesthetic, film-noir movie stills, black-and-
+white photojournalism. The image reads as a single dramatic photograph captured
+under harsh single-source light — never an illustration, never a diagram. The
+mood is serious, evidentiary, weight-of-real-life.
+
+Illustration vocabulary:
+- A single dramatic subject under hard directional light: a hand reaching, a
+  pair of hands working, a single object on a table (a book, a document, a
+  tool, a desk item), a shadow on a wall, a folder or paper being held. The
+  subject is ALWAYS an object — never a person.
+- High-contrast monochrome rendering with deep blacks and luminous whites
+- Visible film grain, slight scratches, and paper texture
+- Strong negative space holding tension — the subject is small relative to the
+  frame
+- Background: {background_color}, treated as deep shadow or fog
+- Color: {accent_name} ({accent_color}) is the ONLY color in an otherwise
+  monochrome image — appearing as a single deliberate mark (a red ink stamp,
+  a darkroom annotation underline, a frame marker, or a tag on the subject).
+  It MUST be visible and intentional, sized like a real archival mark, never
+  a wash of color over the image and never so small the viewer misses it.
+- Aspect: square, 1024x1024
+
+Avoid:
+- Multiple subjects competing for attention
+- Bright or saturated palettes (this image is monochrome plus one accent)
+- Flat-vector or marker treatments
+- Cartoon or stylized characters
+- Centered text labels treated as the subject
+- **Photographs of people, portraits, faces, or human figures of any kind.**
+  The subject must be an object (book, paper, folder, tool, desk item, shadow
+  of an unseen presence). A single anonymous hand or arm may appear INTERACTING
+  with the object (holding a paper, placing a bookmark, pointing at a document),
+  but the face, head, or body of a person must NEVER be visible. No photographs
+  within photographs of people either — a book or document held in the frame
+  must NOT show a portrait, headshot, or face on its cover or pages.
+
+Visual intent: {visual_intent}
+
+BRAND MARKS AND APP ICONS: when the Visual Intent names a real app, service,
+or company by name (Gmail, Slack, QuickBooks, Notion, Figma, etc.), render it
+as an abstract, neutral icon that suggests the tool's function — NEVER as the
+company's actual logo, brand wordmark, or branded colors. Use the art style's
+own vocabulary to render a recognizable category icon: an envelope for email,
+a chat bubble for messaging, a receipt or ledger for accounting, a calendar
+grid for scheduling, a stylized window for a code editor. Real brand logos
+break the carousel's visual coherence and create trademark risk.
+
+TEXT IN THE IMAGE: render text ONLY when (a) it appears in the embedded mark
+below, OR (b) it is a concrete label explicitly named in the Visual Intent
+above (e.g., a document title named verbatim). Do NOT add invented archival
+metadata (fake case numbers, fabricated dates like "1962", made-up photographer
+credits, invented filing tags), invented body copy on documents shown in the
+scene, or stamped placeholder text. Smudges, ink marks, and abstract paper
+texture without legible text are encouraged; invented archival text is forbidden.
+
+IMPORTANT — the following short phrase should appear EXACTLY ONCE inside the
+artwork as a SMALL EVIDENTIARY MARK — a red ink stamp, a darkroom annotation,
+a hand-typed caption strip, or a marker tag attached to the subject. NOT as a
+centered headline or title:
+{embedded_message}
+
+The mark MUST be legible, MUST be spelled exactly as provided, and MUST feel
+like a real archival annotation — typewriter typeface or stamped letterforms,
+sized like a real caption, not a slide headline.
+
+Do NOT duplicate the mark text elsewhere in the image. The mark is a SINGLE
+evidentiary annotation; if the subject of the photograph has other text on it
+(a sign, a folder tab, a stenciled label), those should be separate phrases —
+not a repeat of the mark.

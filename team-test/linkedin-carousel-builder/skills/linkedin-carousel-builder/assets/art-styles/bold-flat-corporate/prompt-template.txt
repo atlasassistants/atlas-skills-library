@@ -1,0 +1,87 @@
+CONTEXT: This illustration supports a LinkedIn business carousel for executives
+and founders. Subject matter is business, work, productivity, strategy, and
+tools — never personal life, family scenes, casual entertainment, vacation
+imagery, food, sports, or unrelated objects.
+
+Illustration in a bold-flat-corporate consulting-deck aesthetic.
+
+Genre references: McKinsey & Company deck illustrations, BCG and Bain
+infographic conventions, Big-4 annual-report executive summaries, and Harvard
+Business Review consulting-framework spreads. The hero is always a rigid
+diagrammatic composition — a 2x2 matrix, a quadrant chart, a stage-gate
+diagram, a hierarchy tree, or a stacked pyramid. Geometry is precise; nothing
+is hand-drawn; everything sits on a grid.
+
+Illustration vocabulary:
+- A formal diagrammatic structure as the focal element: 2x2 grid, four-stage
+  funnel, five-step pyramid, decision matrix, or annotated quadrant chart
+- Pure flat-vector rendering with razor-sharp edges and zero handcraft
+- Color palette: {accent_name} ({accent_color}) is the DOMINANT chromatic —
+  fills the primary diagram cells (the focal quadrant, the apex of the
+  pyramid, the active funnel stage). Secondary colors are 2 neutral greys
+  (one light, one dark) plus {background_color}. Never more than four
+  colors total. The accent must be visibly the primary color of the
+  diagram, not a sparse marker.
+- Geometric sans labels INSIDE each cell of the diagram, never below as
+  captions. Cell labels must use words from the Visual Intent OR be
+  categorical (e.g., "Stage 1 / Stage 2 / Stage 3", "Quadrant A / B / C / D")
+  — never invented business terms that aren't in the source.
+- Axis lines without labels are PREFERRED. If axis labels are needed, they
+  must match dimensions explicitly named in the Visual Intent above. Generic
+  invented axes ("Business Impact / Solution State", "Model Novelty /
+  Performance", "Productivity Lift / Effort") are FORBIDDEN.
+- Generous whitespace; the diagram occupies less than 70% of the frame
+- Aspect: square, 1024x1024
+
+Avoid:
+- Hand-drawn or marker treatment (this is the opposite of pastel-diagram-marker)
+- Illustrated characters, objects, or scenes
+- More than four colors
+- Multiple competing focal elements
+- Photographic textures, grain, or paper feel
+- Resemblance to clean-saas product-surface illustrations
+- **Invented percentages, statistics, or quantitative claims.** Do NOT render
+  numbers like "93%", "72%", "3.2x", "$4.2M" UNLESS those specific numbers
+  appear in the embedded message below. If embedded_message contains no
+  number, the image must contain no number. Use color blocks, highlighted
+  cells, arrows, and focal-element emphasis to convey magnitude instead.
+- **Invented axis labels.** Generic axes like "Business Impact", "Strategic
+  Value", "Model Novelty", "Effort vs Reward" are FORBIDDEN unless those exact
+  dimensions are named in the Visual Intent above. Prefer unlabeled axes.
+- **Invented callout boxes** with fabricated explanatory text ("Sustainable
+  advantage comes from systems that learn, remember, and compound" or similar
+  consulting-speak filler) that isn't in the embedded message or Visual Intent.
+
+Visual intent: {visual_intent}
+
+BRAND MARKS AND APP ICONS: when the Visual Intent names a real app, service,
+or company by name (Gmail, Slack, QuickBooks, Notion, Figma, etc.), render it
+as an abstract, neutral icon that suggests the tool's function — NEVER as the
+company's actual logo, brand wordmark, or branded colors. Use the art style's
+own vocabulary to render a recognizable category icon: an envelope for email,
+a chat bubble for messaging, a receipt or ledger for accounting, a calendar
+grid for scheduling, a stylized window for a code editor. Real brand logos
+break the carousel's visual coherence and create trademark risk.
+
+TEXT IN THE IMAGE: render text ONLY when (a) it appears in the embedded label
+below, OR (b) it is a concrete label explicitly named in the Visual Intent
+above. The consulting-deck genre tempts the model to fill space with
+fabricated metrics — resist this. If a cell has no specified label, leave it
+labeled only with a category marker (A/B/C/D, 1/2/3, etc.). If the diagram
+has no specified callout number, omit the quantitative callout entirely. Empty
+diagram cells with strong color emphasis are PREFERRED over invented labels.
+
+IMPORTANT — the following short phrase should appear EXACTLY ONCE inside the
+artwork as a QUADRANT LABEL or BOXED ANNOTATION sitting inside one of the
+diagram cells, set in a precise geometric sans-serif typeface with the sober
+authority of a professional services report:
+{embedded_message}
+
+The label MUST be legible, MUST be spelled exactly as provided, and MUST feel
+like a real consulting-deck cell label — never a slide headline or
+celebratory callout.
+
+Do NOT duplicate the label text elsewhere in the image. If any words from the
+label also appear as axis labels, other quadrant labels, or the quantitative
+callout, keep those other elements distinct — the focal quadrant label is the
+SINGLE editorial annotation, not a phrase repeated across the diagram.

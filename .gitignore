@@ -40,3 +40,8 @@ __pycache__/
 **/client-profile/meeting-performance-analyzer-preferences.md
 **/.meeting-performance-analyzer-last-run.json
 **/.meeting-performance-analyzer-onboarding-in-progress.json
+
+# Local-only working artifacts (never ship)
+phase-8-smoke/
+docs/superpowers/
+.superpowers/

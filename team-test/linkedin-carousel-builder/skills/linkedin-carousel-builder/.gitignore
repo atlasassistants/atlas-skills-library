@@ -1,0 +1,6 @@
+# Runtime venv created on first skill trigger
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc

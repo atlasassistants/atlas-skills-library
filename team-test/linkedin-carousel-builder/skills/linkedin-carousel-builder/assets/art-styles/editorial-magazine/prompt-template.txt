@@ -1,0 +1,72 @@
+CONTEXT: This illustration supports a LinkedIn business carousel for executives
+and founders. Subject matter is business, work, productivity, strategy, and
+tools — never personal life, family scenes, casual entertainment, vacation
+imagery, food, sports, or unrelated objects.
+
+Illustration in an editorial-magazine aesthetic.
+
+Genre references: Harvard Business Review feature openers, Bloomberg
+Businessweek section spreads, Monocle inset illustrations, and The Economist
+print-edition spot illustrations. Each image reads like a full magazine page
+layout — a single dramatic focal object plus editorial typography. Restraint
+is the visual signature; the page itself is part of the composition.
+
+Illustration vocabulary:
+- One dramatic focal object as the subject — photorealistic or carefully
+  rendered 3D (a chess piece, a paper, a single building, a hand holding a
+  card, a magnifying glass over a document, a single matchstick)
+- Set inside a magazine layout: serif display headline at the top, small body
+  excerpt or pull-quote at the side or below, optional folio or page-number
+  marks
+- Color: {accent_name} ({accent_color}) is the editorial accent that anchors
+  the composition — appears in TWO deliberate places: on the pull-quote bar
+  or rule line AND on at least one detail of the focal object (a stripe on
+  the chess piece, the edge of the paper, a highlight on the matchstick
+  head). Secondary palette is restricted to 2–3 muted neutrals (greys,
+  off-whites, paper warmth) plus {background_color}. NO other saturated
+  colors.
+- Background: {background_color}, treated like the paper of the page
+- Subtle paper grain or print texture
+- Strong negative space; the focal object sits with editorial breathing room
+- Aspect: square, 1024x1024
+
+Avoid:
+- Multiple competing focal elements
+- Cartoon or whimsical objects
+- Flat-vector treatment (this is editorial illustration, not UI)
+- Sans-serif display headlines (use a serif display face)
+- Bright multi-color palettes
+
+Visual intent: {visual_intent}
+
+BRAND MARKS AND APP ICONS: when the Visual Intent names a real app, service,
+or company by name (Gmail, Slack, QuickBooks, Notion, Figma, etc.), render it
+as an abstract, neutral icon that suggests the tool's function — NEVER as the
+company's actual logo, brand wordmark, or branded colors. Use the art style's
+own vocabulary to render a recognizable category icon: an envelope for email,
+a chat bubble for messaging, a receipt or ledger for accounting, a calendar
+grid for scheduling, a stylized window for a code editor. Real brand logos
+break the carousel's visual coherence and create trademark risk.
+
+TEXT IN THE IMAGE: render text ONLY when (a) it appears in the embedded
+display headline below, OR (b) it is a concrete label explicitly named in the
+Visual Intent above. Pull-quote bars, folio marks, and small editorial caption
+strips may include text from the embedded message (e.g., a kicker echoing the
+headline) but must NOT contain fabricated body-copy paragraphs, made-up
+publication names, fake author bylines, or invented statistics. Editorial
+columns of placeholder Latin text are acceptable; readable invented English
+copy is forbidden.
+
+IMPORTANT — the following short headline should appear EXACTLY ONCE inside the
+artwork as the EDITORIAL DISPLAY HEADLINE at the top of the composition, set
+in a serif display typeface with the weight and authority of a magazine cover
+line:
+{embedded_message}
+
+The headline MUST be legible, MUST be spelled exactly as provided, and MUST
+sit within the editorial layout — not pasted over the focal object.
+
+Do NOT duplicate the headline text elsewhere in the image. If any words from
+the headline also appear as caption text, pull-quote text, or folio marks,
+keep those secondary elements distinct — the editorial display headline is
+the SINGLE top-of-spread headline, not a phrase repeated through the layout.

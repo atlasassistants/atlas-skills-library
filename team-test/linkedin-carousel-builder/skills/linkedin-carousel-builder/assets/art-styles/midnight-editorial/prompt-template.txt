@@ -1,0 +1,111 @@
+CONTEXT: This illustration supports a LinkedIn business carousel for executives
+and founders. Subject matter is business, work, productivity, strategy, and
+tools — never personal life, family scenes, casual entertainment, vacation
+imagery, food, sports, or unrelated objects.
+
+Illustration in a polished dark editorial vector aesthetic.
+
+Genre references: Stripe Press editorial illustrations, Apple keynote dark-mode
+product slides, Linear / Vercel / Notion marketing illustrations on dark
+backgrounds, B2B SaaS investor-deck dark themes, New York Times Opinion section
+dark-mode digital illustrations. The mood is calm, considered, and expensive —
+never moody, never grungy, never atmospheric-drama. The image reads as a
+deliberate modern marketing asset.
+
+Illustration vocabulary:
+- A single focal subject rendered as a clean editorial vector. Prefer (in this
+  order to counter the model's bias toward dashboard imagery): an abstract
+  composition representing a concept (a node graph, a path, a connection, a
+  stylized network), a stylized object representing a tool or workflow (a key,
+  a lock, a bridge, a doorway, a tool on a workbench), a document or folder
+  shown in editorial perspective, hands interacting with an object, OR a
+  laptop / dashboard / data visualization when the Visual Intent explicitly
+  calls for product or data imagery.
+- Do NOT default every illustration to a UI mockup or dashboard. Use UI
+  imagery only when the Visual Intent specifically describes a product, screen,
+  or data view.
+- Subject is ALWAYS an object, scene, or abstract composition — NEVER a person.
+  An anonymous hand or arm may interact with the focal object, but the face,
+  head, or body of a person must NEVER be visible. No portraits, no headshots,
+  no figures with visible faces inside any document, screen, or surface shown
+  in the illustration.
+- If the Visual Intent below implies a person (for example: "a confident
+  founder presenting", "a team leader making a decision", "a worker focused on
+  their task"), translate that into the workspace, the object of their
+  attention, an over-the-shoulder framing of hands on the work, or an empty
+  chair or desk that implies presence. Do not render the person.
+- Subject presence is confident and central — larger than the small subject of
+  a documentary photograph — but exact size adapts to what the Visual Intent
+  calls for. Do not force a fixed frame percentage.
+- Background: clean solid {background_color} matching the brand exactly. Do
+  NOT invent a gradient, vignette, or atmospheric haze in the background. The
+  background is one color. Depth comes from subject-level lighting (brighter
+  rendering on the focal subject, slightly muted peripheral elements within
+  the subject composition), not from any background effect.
+- Color: {accent_name} ({accent_color}) is a focal highlight on the subject —
+  not an atmospheric effect. Preferred treatments in order: a single
+  brightly-colored UI element on the subject (a button, an indicator dot, a
+  highlighted state, a status pill), a thin underline on a critical data point
+  or label, a colored stroke on the most important shape. Avoid literal "glow"
+  effects (they render as dated Photoshop outer-glow halos). The accent must
+  be visible and intentional, drawing the eye to the most important part of
+  the subject. NOT an ink stamp like noir.
+- Rendering style: vector illustration with subtle depth — clean shapes, light
+  gradients within shapes for dimension, no film grain, no scratches, no paper
+  texture, no distressed effects.
+- Aspect: square, 1024x1024.
+
+Avoid:
+- Photographic, photojournalism, film-grain, or scratched-paper treatments.
+- Faces, people, portraits, human figures of any kind.
+- Heavy distressed, grungy, or "found document" textures.
+- Inventing background gradients, vignettes, or atmospheric effects (the
+  background stays solid {background_color}).
+- Defaulting every illustration to a UI mockup or dashboard view.
+- Overuse of accent color (single focal-point use, not multi-element).
+- Literal "glow" effects rendered as Photoshop-style outer-glow halos.
+- Cartoon characters, hand-drawn marker treatments, stick figures.
+- Centered text labels treated as the subject (a giant headline floating on a
+  dark background is a typography-only slide, not an illustration).
+- Photo-realistic 3D renders.
+
+Visual intent: {visual_intent}
+
+BRAND MARKS AND APP ICONS: when the Visual Intent names a real app, service,
+or company by name (Gmail, Slack, QuickBooks, Notion, Figma, etc.), render it
+as an abstract, neutral icon that suggests the tool's function — NEVER as the
+company's actual logo, brand wordmark, or branded colors. Use the art style's
+own vocabulary to render a recognizable category icon: an envelope for email,
+a chat bubble for messaging, a receipt or ledger for accounting, a calendar
+grid for scheduling, a stylized window for a code editor. Real brand logos
+break the carousel's visual coherence and create trademark risk.
+
+TEXT IN THE IMAGE: render text ONLY when (a) it appears in the embedded
+annotation below, OR (b) it is a concrete label explicitly named in the Visual
+Intent above (for example, a product-surface title named verbatim). Do NOT
+invent additional UI text (sample data rows, fabricated metrics like "98%
+uptime" or "$4.2K", made-up button labels, captions) unless those words appear
+in the embedded annotation or Visual Intent. When unsure whether to add label
+text, omit it — let the composition speak.
+
+IMPORTANT — the following short phrase should appear EXACTLY ONCE inside the
+artwork as a CLEAN UI-STYLE LABEL using ONE of these concrete treatments: (1)
+a small sans-serif caption directly below the focal subject, sized at roughly
+10% of the subject's width, like a figure caption in an editorial article; (2)
+a pill-shaped label tag attached to the subject, with the text in white
+sans-serif on a darker pill (or on the accent color if the embedded annotation
+is an emphasis statement); (3) a thin underline of the accent color directly
+under the most important shape, with the text sitting just below the
+underline. Sans-serif typeface throughout. Sized like a real UI label, legible
+at thumbnail size but never headline-sized. NOT a stamp like noir, NOT a
+handwritten caption like handdrawn, NOT a torn-paper or scrapbook effect:
+{embedded_message}
+
+The text MUST be legible, MUST be spelled exactly as provided, and MUST feel
+like part of the illustration's visual language — not a slide headline pasted
+on top.
+
+Do NOT duplicate the label text elsewhere in the image. If any words from the
+label also appear as other elements (badges, row titles, card headings), keep
+those other labels distinct — do not re-render the same phrase as both the
+focal label AND a secondary element label.

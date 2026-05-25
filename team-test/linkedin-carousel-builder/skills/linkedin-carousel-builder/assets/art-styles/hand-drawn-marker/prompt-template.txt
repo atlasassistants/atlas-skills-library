@@ -1,0 +1,70 @@
+CONTEXT: This illustration supports a LinkedIn business carousel for executives
+and founders. Subject matter is business, work, productivity, strategy, and
+tools — never personal life, family scenes, casual entertainment, vacation
+imagery, food, sports, or unrelated objects.
+
+Illustration in a hand-drawn-marker explainer aesthetic.
+
+Genre references: Tim Urban's Wait But Why illustrations, sketchnoting and
+graphic recording, the Doodly explainer-video aesthetic, and napkin-sketch
+strategy diagrams. The hero is always a small narrative scene with figures or
+hands — drawn loosely, with personality, as if sketched in real time with a
+thick black marker.
+
+Illustration vocabulary:
+- Loose hand-drawn figures with personality: simple stick people with
+  expressive faces, gesturing hands, characters pointing or pondering
+- Scribbled boxes, dashed arrows, asterisks, underlines, and emphasis marks
+  around key terms
+- One or two simple secondary objects rendered as quick marker sketches
+  (a sign, a door, a question mark, a lightbulb, an arrow split into branches)
+- Black or near-black marker linework with slightly imperfect edges and energy
+- Background: {background_color}, clean off-white paper
+- Color: {accent_name} ({accent_color}) is the DOMINANT highlight color —
+  appears in at least THREE distinct marker strokes (e.g., a filled shape,
+  an underline beneath a key word, AND a circled emphasis mark). Black or
+  near-black marker is the primary line color; secondary scribbles are
+  grey or muted. {background_color} is the paper. NO other accent colors.
+- Aspect: square, 1024x1024
+
+Avoid:
+- Stiff vector illustrations
+- Cartoon characters that look like clip art
+- Photorealistic rendering
+- Multiple accent colors
+- Boxes full of text labels with no narrative
+
+Visual intent: {visual_intent}
+
+BRAND MARKS AND APP ICONS: when the Visual Intent names a real app, service,
+or company by name (Gmail, Slack, QuickBooks, Notion, Figma, etc.), render it
+as an abstract, neutral icon that suggests the tool's function — NEVER as the
+company's actual logo, brand wordmark, or branded colors. Use the art style's
+own vocabulary to render a recognizable category icon: an envelope for email,
+a chat bubble for messaging, a receipt or ledger for accounting, a calendar
+grid for scheduling, a stylized window for a code editor. Real brand logos
+break the carousel's visual coherence and create trademark risk.
+
+TEXT IN THE IMAGE: render text ONLY when (a) it appears in the embedded
+annotation below, OR (b) it is a concrete label explicitly named in the Visual
+Intent above (e.g., a box labeled with a word the intent specifies). Do NOT
+invent narrative labels on signs, doors, buildings, boxes, papers, or other
+scene elements (no invented "EXPENSIVE PLUGIN", "WRITTEN FOR YOU", "AFTER",
+"BEFORE", etc. unless those words appear in the embedded annotation or Visual
+Intent). Scribbled marks (asterisks, underlines, arrows) that don't contain
+text are encouraged; invented text labels are forbidden.
+
+IMPORTANT — the following short phrase should appear EXACTLY ONCE inside the
+artwork as a HAND-LETTERED MARKER ANNOTATION — written as part of the scene,
+e.g. a thought bubble, a sign held by a figure, or a hand-lettered scribble
+underlined for emphasis:
+{embedded_message}
+
+The annotation MUST be legible, MUST be spelled exactly as provided, and MUST
+feel like a real annotator's hand-lettering — slightly uneven baseline, marker
+weight, sketched underline or asterisk if appropriate.
+
+Do NOT duplicate the annotation text elsewhere in the image. If any words from
+the annotation also appear as labels on figures or objects in the scene, use
+those labels for the figures/objects ONLY — do not re-render them as the
+hand-lettered annotation. The annotation is the SINGLE editorial callout.
